@@ -16,8 +16,6 @@ const Event = {
     // 随机id
     const nodeId = new Date().getTime();
 
-    console.log(addNodeModel)
-
     const model = {
       type: addNodeModel.nodeType,
       id: `${nodeId}`,
@@ -31,6 +29,8 @@ const Event = {
     // 添加并重绘
     this.graph.addItem('node', model);
     this.graph.paint();
+
+    this.graph.emit('onAddPanelNode', model);
 
     const MacroCommand = this.graph.get('MacroCommand');
     MacroCommand && MacroCommand.executeCommand('docat', { graph: this.graph });

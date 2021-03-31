@@ -51,9 +51,6 @@ export default class Anchor extends Item {
       draggable: true,
     });
     this.hotpot.toFront();
-    // console.log(this.get(''));
-    // console.log(this.getKeyShape());
-    // this.getKeyShape().toFront();
   }
 
   setHotspotActived(active) {

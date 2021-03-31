@@ -1,4 +1,7 @@
 node_modules
 #dist
-# src
-# tsconfig.json
+dist/icon
+src
+tsconfig.json
+.idea
+.VSCodeCounter

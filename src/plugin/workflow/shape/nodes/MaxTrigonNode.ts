@@ -14,7 +14,6 @@ export default class MaxCircleNode extends BaseNode {
     let height = this.size.height;
     const { style = {} } = cfg;
     const { sideLength = 100, position = 'top' } = style;
-    console.log(cfg);
     const side8 = sideLength * 0.8;
     const side5 = sideLength * 0.5;
     const side1 = sideLength;
@@ -129,8 +128,6 @@ export default class MaxCircleNode extends BaseNode {
         [0.25, 0.5], // left
       ]
     }
-
-    console.log('我执行了')
 
     return [
       [0.5, 0.25], // top

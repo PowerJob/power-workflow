@@ -54,6 +54,7 @@ const Event = {
 
     this.point = null;
     this.origin = null;
+    this.graph.emit('afternodedragend');
   },
   moveDelegate(item, x, y) {
     let shape = item.get('delegateShape');
@@ -122,6 +123,8 @@ const Event = {
     shape.attr({ x: x, y: y });
 
     this.graph.paint();
+
+    this.graph.emit('afternodedrag', shape);
   }
 }
 

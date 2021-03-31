@@ -7,4 +7,6 @@ import HoverEdge from './edge/hover';
 import DeleteItem from './nodes/delete';
 import addNode from './canvas/addNode';
 
-export { HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode }
+import AlignNode from './nodes/align';
+
+export default [ HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode, AlignNode ]

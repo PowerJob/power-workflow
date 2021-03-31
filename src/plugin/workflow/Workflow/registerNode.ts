@@ -38,7 +38,8 @@ export class RegisterNode extends RegisterManger {
       },
       drawAnchor: function() {
         return self.drawAnchor && self.drawAnchor.apply(self, arguments);
-      }
+      },
+      test: () => {}
     });
   };
 

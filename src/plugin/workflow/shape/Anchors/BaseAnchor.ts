@@ -33,7 +33,6 @@ export default class BaseAnchor extends RegisterManger {
             return shape;
           },
           setState(name, value, item) {
-            console.log(name);
             if(name === 'anchor-active') {
               if(value) {
                 this.update({style: {fill: '#1990FF', r: 5}}, item);

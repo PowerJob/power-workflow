@@ -9,7 +9,6 @@ export default class MaxVerticalTrigonNode extends MaxTrigonNode {
   }
 
   getAnchorPoints() {
-    console.log('哈啊哈')
     return [
       [0.5, 0], // top
       [0.75, 0.5], // right

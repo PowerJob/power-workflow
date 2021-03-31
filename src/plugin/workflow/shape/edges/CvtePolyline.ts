@@ -16,7 +16,6 @@ export default class CvtePolyline extends RegisterEdge {
   group
   constructor(Grid) {
     super(Grid);
-    console.log()
     this.register();
   }
 
@@ -88,7 +87,7 @@ export default class CvtePolyline extends RegisterEdge {
     points = this.filterConnectablePoints(points, sBBox);
     points = this.filterConnectablePoints(points, tBBox);
     const polylinePoints = this.AStar(points, sPoint, tPoint, sBBox, tBBox);
-    console.log(polylinePoints)
+
     return polylinePoints;
   }
 
@@ -135,7 +134,6 @@ export default class CvtePolyline extends RegisterEdge {
   }
 
   combineBBoxes(sBBox, tBBox) {
-    console.log(9)
     const minX = Math.min(sBBox.minX, tBBox.minX), minY = Math.min(sBBox.minY, tBBox.minY),
       maxX = Math.max(sBBox.maxX, tBBox.maxX), maxY = Math.max(sBBox.maxY, tBBox.maxY);
     return {
@@ -155,7 +153,6 @@ export default class CvtePolyline extends RegisterEdge {
   }
 
   crossPointsByLineAndBBox(bbox,centerPoint){
-    console.log(12)
     let crossPoints = [];
     if(!(centerPoint.x < bbox.minX || centerPoint.x > bbox.maxX))
       crossPoints = crossPoints.concat([{ x: centerPoint.x, y: bbox.minY }, { x: centerPoint.x, y: bbox.maxY }]);
@@ -165,7 +162,6 @@ export default class CvtePolyline extends RegisterEdge {
   }
 
   getBBoxFromVertexes(sPoint, tPoint){
-    console.log(10)
     const minX = Math.min(sPoint.x,tPoint.x), maxX = Math.max(sPoint.x,tPoint.x),
       minY = Math.min(sPoint.y,tPoint.y), maxY = Math.max(sPoint.y,tPoint.y);
     return {

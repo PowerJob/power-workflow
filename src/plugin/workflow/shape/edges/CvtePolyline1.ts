@@ -9,20 +9,20 @@ const uniqBy = (arr, key) => {
 
 const stateList = {
   /** 控制锚点的显示 */
-  hoverEdge: function(item, value){
+  hoverEdge: function (item, value) {
     const group = item.getContainer();
     const current = group.getChildByIndex(0);
-    if(value) {
+    if (value) {
       current.attr("stroke", '#60A1DE')
     } else {
       current.attr("stroke", '#164979')
     }
   },
   /** 选中锚点 */
-  selectEdge: function(item, value) {
+  selectEdge: function (item, value) {
     const group = item.getContainer();
     const current = group.getChildByIndex(0);
-    if(value) {
+    if (value) {
       current.attr({
         "opacity": 1,
         "lineWidth": 2
@@ -38,14 +38,14 @@ const stateList = {
 
 export default function (G6) {
   G6.registerEdge('cvte-polyline', {
-    draw(cfg, group) {
+    drawShape(cfg, group) {
       this.group = group;
+      this.label = null;
 
       // 获取到开始的点
       const startPoint = cfg.startPoint;
       // 获取的结束的点
       const endPoint = cfg.endPoint;
-      // console.log(JSON.stringify(cfg.sourceNode.getBBox()));
 
       const shape = group.addShape('path', {
         className: 'edge-shape',
@@ -63,6 +63,11 @@ export default function (G6) {
         },
         name: 'edge-shape',
       });
+
+      // this.drawText(cfg, group)
+
+      // this.label = this.drawText(cfg, group)
+
       return shape;
     },
 
@@ -77,6 +82,48 @@ export default function (G6) {
       }
       points.push(endPoint);
       return this.getPath(points);
+    },
+
+    /** 绘制文字 */
+    drawLabel(cfg, group) {
+      const labelCfg = cfg.labelCfg || {};
+      console.log(cfg);
+      const labelStyle = this.getLabelStyle(cfg, labelCfg, group);
+      const label = group.addShape('text', {
+        attrs: {
+          ...labelStyle,
+        }
+      });
+      const labelBBox = label.getBBox();
+      group.addShape('rect', {
+        attrs: {
+          x: labelBBox.x - 4 / 2,
+          y: labelBBox.y - 4 / 2,
+          width: labelBBox.width + 4,
+          height: labelBBox.height + 4,
+          fill: '#fff',
+          stroke: '#fff',
+        },
+        name: 'edge-labelRect',
+        className: 'edge-labelRect',
+      });
+      group.toBack();
+      label.toFront();
+      return label;
+    },
+
+    afterUpdate(cfg, item){
+      const label = item.getContainer().findByClassName('edge-label');
+      const labelRect = item.getContainer().findByClassName('edge-labelRect');
+      if(label) {
+        const labelBBox = label.getBBox();
+        labelRect.attr({
+          x: labelBBox.x - 4 / 2,
+          y: labelBBox.y - 4 / 2,
+          width: labelBBox.width + 4,
+          height: labelBBox.height + 4,
+        });
+      }
     },
 
     /** 计算终点的位置 */

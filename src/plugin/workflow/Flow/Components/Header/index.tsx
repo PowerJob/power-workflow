@@ -72,6 +72,12 @@ class index extends Component<IProps> {
             <span className="icon-text">全屏</span>
           </div>
         </div>
+        {
+          React.Children.map(this.props.children, (child, index) => {
+            const childProps = (child as any).props;
+            return React.cloneElement(child as any, childProps);
+          })
+        }
       </div>
     );
   }

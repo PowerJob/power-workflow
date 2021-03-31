@@ -21,7 +21,8 @@ import Shape from '@antv/g6-core/lib/element/shape';
 import BaseAnchor from '../shape/Anchors/BaseAnchor';
 
 // import HoverNode from '../behavior/nodes/hover';
-import {HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode} from '../behavior';
+// import {HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode, AlignNode} from '../behavior';
+import Behaviors from '../behavior';
 
 
 
@@ -69,6 +70,8 @@ interface IProps {
   edgeCallback?: (sourceNode, targetNode) => boolean;
   /** 要注册节点的列表 */
   registerNodeList?: any[];
+  /** 初始化时是是否执行动画 */
+  animate?: boolean;
 }
 
 
@@ -87,6 +90,7 @@ export default class CvteWorkflow implements ICvteWorkflow {
   initEdges: any[];
   registerNodes: any[];
   registerNodeList: any[];
+  animate: boolean = false;
   G6
   constructor({
     container,
@@ -99,7 +103,8 @@ export default class CvteWorkflow implements ICvteWorkflow {
     registerNodes = [],
     edgeCallback,
     layout,
-    registerNodeList
+    registerNodeList,
+    animate = false
   }: IProps) {
     this.container = container;
     const check = this.checkProps();
@@ -115,6 +120,7 @@ export default class CvteWorkflow implements ICvteWorkflow {
     this.edgeCallback = edgeCallback;
     this.layout = layout;
     this.registerNodeList = registerNodeList || [];
+    this.animate = animate;
     new BaseAnchor(G6);
 
     this.initRegister();
@@ -132,7 +138,8 @@ export default class CvteWorkflow implements ICvteWorkflow {
       // plugins: [gird, ...this.plugins],
       plugins: [...this.plugins],
       modes: this.initMode(),
-      layout: this.layout
+      layout: this.layout,
+      animate: this.animate
     });
 
     this.graph.set('edgeEndCallback', this.edgeEndCallback)
@@ -167,8 +174,8 @@ export default class CvteWorkflow implements ICvteWorkflow {
   private initMode() {
     return {
       default: ['drag-canvas', {type: "zoom-canvas", sensitivity: 1}],
-      edit: ['drag-canvas', 'cover-hover-node', 'cover-hover-anchor', 'cover-drag-node', 'cover-drag-anchor', 'cover-select-node', 'cover-hover-edge', 'cover-delete-item', 'cover-add-node'],
-      view: ['drag-canvas', 'cover-select-node', 'cover-drag-node']
+      edit: ['drag-canvas', 'cover-hover-node', 'cover-hover-anchor', 'cover-drag-node', 'cover-drag-anchor', 'cover-select-node', 'cover-hover-edge', 'cover-delete-item', 'cover-add-node', 'cover-align-node'],
+      view: ['drag-canvas', 'cover-select-node', 'cover-drag-node', 'cover-align-node']
     }
   }
 
@@ -189,8 +196,8 @@ export default class CvteWorkflow implements ICvteWorkflow {
       new SelfNode(this.G6);
     });
     
-    // 行为注册
-    [HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode].forEach(SelfNode => {
+    // 行为注册[HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode, AlignNode]
+    Behaviors.forEach(SelfNode => {
       new SelfNode(this.G6);
     });
 
@@ -214,7 +221,6 @@ export default class CvteWorkflow implements ICvteWorkflow {
       this.G6.registerNode(item.nodeName, {
         drawKeyShape(cfg, group) {
           let keyShape = null;
-          console.log(item.nodeName)
           nodeDesc.forEach((node, index) => {
             if(index === 0) {
               keyShape = this.reloadDrawKeyShape(cfg, group, node);

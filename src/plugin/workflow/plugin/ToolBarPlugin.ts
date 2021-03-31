@@ -35,13 +35,11 @@ export default class TooBarPlugin {
     });
     /** 监听选中事件 */
     graph.on('onSelectNode', (item) => {
-      console.log('我被监听到了');
       select.forEach(key => {
         const CopyDOM = parentNode.querySelector(`.xioo-work-header .xioo-work-header-group div[data-command='${key}']`);
         CopyDOM.classList.add('actionable');
       })
       // const CopyDOM = parentNode.querySelector(".xioo-work-header .xioo-work-header-group div[data-command='copy']");
-      // console.log(CopyDOM);
       // CopyDOM.classList.add('actionable');
     });
     /** 监听清楚选中事件 */

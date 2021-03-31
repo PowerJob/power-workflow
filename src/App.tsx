@@ -6,57 +6,69 @@
  * @LastEditTime: 2021-02-03 15:32:37
  */
 import React, { Component } from 'react'
-import Workflow, { RegisterNode } from './plugin';
-import FLow from './plugin/workflow/Flow'
+// import Workflow, { RegisterNode } from './plugin';
+import Flow from './plugin/workflow/Flow'
+
+import { ToolGroup, ToolItem } from './plugin/workflow/Flow/Components/Toolbar'
+// import Flow from 'max-workflow';
+
+// import { default as Flow, Workflow } from '../dist/power-workflow';
+// import Flow from 'max-workflow';
+
+import config from './config';
 
 import 'font-awesome/css/font-awesome.css';
 
-class MyNode extends RegisterNode {
-  name = 'test-node'
-  constructor(G6) {
-    super(G6);
-    this.register();
-  }
-  draw(cfg, group, inc) {
-    const keyShape = group.addShape('rect', {
-      attrs: {
-        width: 170,
-        height: 70,
-        fill: '#C7E4FF',
-			  stroke: '#61B3FF',
-			  opacity: 0.6,
-			  lineWidth: 2,
-			  radius: 8,
-			  cursor: 'move'
-      },
-      name: 'power-rect-node',
-      className: 'base-node'
-    });
-    return keyShape;
+
+// class MyNode extends RegisterNode {
+//   name = 'test-node'
+//   constructor(G6) {
+//     super(G6);
+//     this.register();
+//   }
+//   draw(cfg, group, inc) {
+//     const keyShape = group.addShape('rect', {
+//       attrs: {
+//         width: 170,
+//         height: 70,
+//         fill: '#C7E4FF',
+// 			  stroke: '#61B3FF',
+// 			  opacity: 0.6,
+// 			  lineWidth: 2,
+// 			  radius: 8,
+// 			  cursor: 'move'
+//       },
+//       name: 'power-rect-node',
+//       className: 'base-node'
+//     });
+//     return keyShape;
+//   }
+// }
+
+class MyCommand {
+  execute({ graph }) {
+    console.log(graph);
+    console.log('我是测试命令');
   }
 }
+
+const commandList = [
+  {
+    command: 'test',
+    CommandObject: MyCommand
+  }
+]
 
 
 export default class App extends Component {
 
   state = {
-    nodePanelGroup: [
-      {
-        groupName: '网关',
-        groupKey: 'geteway',
-        defaultOpen: true
-      },
-      {
-        groupName: '流程',
-        groupKey: 'workflow',
-        defaultOpen: true
-      }
-    ],
     registerNodeList: [
       {
         groupKey: 'geteway',
         nodeName: 'flow-aps-node',
         nodeType: 'rect',
+        groupName: '网关',
         nodeDesc: [
           {
             name: 'aps-rect',
@@ -166,6 +178,7 @@ export default class App extends Component {
         groupName: '网关',
         groupKey: 'geteway',
         defaultOpen: true,
+        groupIcon: 'fa-cubes',
         nodes: [
           {
             nodeType: 'flow-node',
@@ -207,13 +220,14 @@ export default class App extends Component {
               fill: '#D45547',
               stroke: '#660200',
               opacity: 0.6,
-              r: 30,
+              r: 20,
               radius: 10
             },
             model: {
               titleText: '攻击网站',
               leftText: 'gogo',
               icon: '/icon/dianshi.svg',
+              r: 20,
               iconWidth: 30,
               iconHeight: 30
             },
@@ -225,10 +239,9 @@ export default class App extends Component {
             thumbnail: 'trigon',
             position: 'bottom',
             style: {
-              fill: '#D45547',
+              fill: '#d45547',
               stroke: '#660200',
               opacity: 0.6,
-              r: 30,
               radius: 10,
               sideLength: 100
             },
@@ -250,7 +263,6 @@ export default class App extends Component {
               fill: '#D45547',
               stroke: '#660200',
               opacity: 0.6,
-              r: 30,
               radius: 10,
               sideLength: 100
             },
@@ -270,6 +282,7 @@ export default class App extends Component {
         groupName: '测试',
         groupKey: 'test',
         defaultOpen: false,
+        groupIcon: 'fa-cubes',
         nodes: [
           {
             nodeType: 'flow-node',
@@ -334,7 +347,168 @@ export default class App extends Component {
           }
         ]
       },
-    ]
+      {
+        groupName: '菱形',
+        groupKey: 'diamond',
+        defaultOpen: false,
+        groupIcon: 'fa-cubes',
+        nodes: [
+          {
+            nodeType: 'max-diamond-node',
+            thumbnail: 'diamond',
+            style: {
+              fill: '#D45547',
+              stroke: '#660200',
+              opacity: 0.6,
+              radius: 10,
+              sideLength: 60
+            },
+            model: {
+              text: '好的',
+              icon: '/icon/dianshi.svg',
+              iconWidth: 30,
+              iconHeight: 30
+            },
+            text: '图表节点',
+            icon: 'http://localhost:8080/icon/dianshi.svg'
+          },  
+        ]
+      },
+    ],
+    initNodes: [
+      {
+        id: 'node1',
+        type: 'base-node',
+        size: [70, 70],
+        // x: 400,
+        // y: 200
+      },
+      {
+        id: 'node2',
+        type: 'flow-node',
+        size: [170, 70],
+        // x: 600,
+        // y: 200,
+        leftText: '1234567',
+        titleText: 'ajskdskkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
+        taskStatus: 'NAME',
+        taskStatusValue: 3,
+        rightText: 'asjdka'
+      },
+      {
+        id: 'node3',
+        type: 'flow-node',
+        size: [170, 70],
+        // x: 600,
+        // y: 200,
+        leftText: '1234567',
+        titleText: '获取数据',
+        taskStatus: '进行中我真的好',
+        rightText: 'asjdka'
+      },
+      {
+        id: 'node4',
+        type: 'flow-node',
+        size: [170, 70],
+        // x: 600,
+        // y: 200,
+        leftText: '1234567',
+        titleText: '获取数据',
+        taskStatus: '进行中',
+        rightText: 'asjdka'
+      },
+      {
+        id: 'node5',
+        type: 'flow-node',
+        size: [170, 70],
+        // x: 600,
+        // y: 200,
+        leftText: '1234567',
+        titleText: '获取数据',
+        taskStatus: '进行中',
+        rightText: 'asjdka'
+      },
+      {
+        id: 'node6',
+        type: 'flow-node',
+        size: [170, 70],
+        // x: 600,
+        // y: 200,
+        leftText: '1234567',
+        titleText: '获取数据',
+        taskStatus: '进行中',
+        rightText: 'asjdka'
+      },
+      {
+        id: 'node7',
+        type: 'flow-node',
+        size: [170, 70],
+        // x: 600,
+        // y: 200,
+        leftText: '1234567',
+        titleText: '获取数据',
+        taskStatus: '进行中',
+        rightText: 'asjdka'
+      },
+      {
+        id: 'node8',
+        type: 'flow-node',
+        size: [170, 70],
+        // x: 600,
+        // y: 200,
+        leftText: '1234567',
+        titleText: '获取数据111',
+        taskStatus: '进行中',
+        rightText: 'asjdka',
+        icon1: '/icon/aite.svg'
+      }
+    ],
+    initEdges: [
+      {
+        source: 'node1',
+        target: 'node2',
+        type: 'cvte-polyline',
+        label: 'Y'
+      },
+      {
+        source: 'node1',
+        target: 'node3',
+        type: 'cvte-polyline',
+        // label: 'Y',
+        text: 'ssjskjk'
+      },
+      {
+        source: 'node2',
+        target: 'node4',
+        type: 'cvte-polyline'
+      },
+      {
+        source: 'node3',
+        target: 'node4',
+        type: 'cvte-polyline',
+        // label: 'Y'
+      },
+      {
+        source: 'node1',
+        target: 'node5',
+        type: 'cvte-polyline'
+      },
+      {
+        source: 'node5',
+        target: 'node6',
+        type: 'cvte-polyline'
+      },
+      {
+        source: 'node6',
+        target: 'node7',
+        type: 'cvte-polyline'
+      },
+      {
+        source: 'node5',
+        target: 'node8',
+        type: 'cvte-polyline'
+      }
+    ],
   }
 
   refWlf = React.createRef<HTMLDivElement>();
@@ -473,7 +647,7 @@ export default class App extends Component {
     //       type: 'cvte-polyline'
     //     }
     //   ],
-    //   registerNodes: [MyNode],
+    //   registerNodes: [], // MyNode
     //   edgeCallback: this.edgeCallback
     // });
     // cvteFlow.graph.setMode('edit');
@@ -485,7 +659,6 @@ export default class App extends Component {
   }
 
   edgeCallback = (sourceNode, targetNode) => {
-    console.log(sourceNode)
     return true;
   }
 
@@ -501,14 +674,66 @@ export default class App extends Component {
     })
   }
 
+  getGraph = (workflow) => {
+    workflow = workflow;
+
+    workflow.graph.refresh();
+
+    workflow.graph.on('onDoubleClickNode', (item) => {
+      // console.log(JSON.stringify(this.workflow.graph.save()));
+      // this.setState({ visible: true });
+      // this.doubleNode = item;
+      // this.doubleNodeGroup = item.get('group');
+
+
+
+      // workflow.graph.updateItem(item, {
+      //   style: {
+      //     fill: '#A74343',
+      //   },
+      //   titleText: '罩得住',
+      //   x: 10,
+      //   y: 10
+      // })
+
+      // console.log('我执行了')
+      // console.log(item.test);
+
+      // item.update({
+      //   style: {
+      //     fill: '#A74343',
+      //   },
+      //   titleText: '罩得住'
+      // })
+      // item.refresh()
+    })
+  }
+
   render() {
     return (
       <div>
         {/* <div className="wlf-g6" ref={this.refWlf}></div> */}
-        <FLow 
-          nodePanelGroup={this.state.nodePanelGroup}
-          registerNodeList={this.state.registerNodeList}
+        <Flow
           groupNodeList={this.state.groupNodeList}
+          // initNodes={this.state.initNodes}
+          initNodes={config.nodes}
+          // initEdges={this.state.initEdges}
+          initEdges={config.edges}
+          animate
+          commandList={commandList}
+          // layout="horizontal"
+          returnGraph={this.getGraph}
+          toolbar={
+            (
+              <React.Fragment>
+                <ToolGroup>
+                  <ToolItem icon="fa-ban" text="禁用" command="test" />
+                  <ToolItem icon="fa-ban" text="禁用" event="yes" />
+                </ToolGroup>
+              </React.Fragment>
+            )
+          }
+        // layout="horizontal"
         />
       </div>
     )

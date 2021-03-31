@@ -23,21 +23,10 @@ class AddNodePanel {
     const children = parentNode.querySelectorAll('div[data-item]');
     each(children, (child,i)=>{
       // const addModel = (new Function("return " + child.getAttribute('data-item')))();
-      child.addEventListener('click', () => {
-        console.log('click')
-      })
       child.addEventListener('dragstart', e => {
-        console.log(e)
         graph.set('addNodeDragging',true);
-
         const nodeData = child.getAttribute('data-item');
-
-        console.log(nodeData);
-
         const nodeModel = JSON.parse(nodeData);
-
-        console.log(nodeModel.nodeName)
-
         const model = {
           nodeType: nodeModel.nodeName,
           offsetX: e.offsetX,
@@ -50,7 +39,6 @@ class AddNodePanel {
         // graph.set('addModel',addModel);
       });
       child.addEventListener('dragend', e => {
-        console.log(e)
         graph.emit('canvas:mouseup',e);
         graph.set('addNodeDragging', false);
         // graph.set('addNodeDragging',false);

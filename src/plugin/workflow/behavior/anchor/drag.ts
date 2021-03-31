@@ -21,7 +21,6 @@ const Event = {
       this.originInfo.targetNode = e.target.getParent().getParent().get('item')
       this.originInfo.targetAnchor = e.item.get('index');
     }
-    // console.log(e.item.setHotspotActived)
   },
   onDrag(e) {
     this._updateEdgeDelegate(this.target, e.x, e.y);
@@ -29,7 +28,6 @@ const Event = {
   _updateEdgeDelegate(item, x, y) {
     let edgeShape = item.get('edgeDelegate');
     const self = this;
-    // console.log(edgeShape);
     if(!edgeShape) {
       const parent = self.graph.get('group');
       edgeShape = parent.addShape('line', {
@@ -96,7 +94,15 @@ const Event = {
       });
     }
     this.graph.setItemState(this.originInfo.sourceNode, 'hoverNode', false);
+
+    // 添加成功之后触发事件
+    this.graph.emit('onDargEdgeEnd', {
+      sourceNode: this.originInfo.sourceNode, 
+      targetNode:this.originInfo.targetNode
+    });
+    
     const MacroCommand = this.graph.get('MacroCommand');
+    // 改变工具栏激活显示
     MacroCommand && MacroCommand.executeCommand('docat', { graph: this.graph });
   },
   clearAllAnchor() {
@@ -113,7 +119,6 @@ const Event = {
     this.graph.setItemState(this.originInfo.sourceNode, 'hover', false);
   },
   showAllAnchor(func) {
-    // console.log(111)
     const allNode = this.graph.getNodes();
     const sourceGroupId = this.originInfo.sourceNode.getModel().groupId;
 
@@ -123,7 +128,6 @@ const Event = {
         group.anchorShapes.forEach(a => {
           a.get('item').showHotpot();
           const index = a.get('item').get('index');
-          // console.log(index);
           if(index === this.originInfo.sourceAnchor) this.graph.setItemState(a.get('item'), 'anchor-active', true);
         });
         

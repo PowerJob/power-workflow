@@ -38,7 +38,6 @@ const stateList = {
   visibleNode: function(item, value) {
     const group = item.get('group');
     const nodeModel = item.getModel();
-    console.log(nodeModel);
     if(value === 'hide') {
       // item.update({
       //   x: nodeModel.startPos.x + 10,
@@ -102,7 +101,6 @@ export default class BaseNode extends RegisterNode {
   }
 
   afterDraw(cfg, group, inc) {
-    // console.log(group)
     // group.showAnchor(group);
   }
 

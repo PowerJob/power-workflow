@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 
+/** 组件 */
 import Workflow from '../Workflow';
 import Header from './Components/Header';
-
 import NodePanelGroup from './Components/NodePanelGroup';
+/** 插件 */
 import AddNodePanel from '../plugin/AddNodePanel';
 import CommandPlugin from '../plugin/CommandPlugin';
 import ToolBarPlugin from '../plugin/ToolBarPlugin';
+import { ToolGroup, ToolItem } from './Components/Toolbar'
+
+/** 配置 */
+import { layoutSetting } from './config';
 import RegisterCommand from '../command';
 
 import './index.less';
@@ -31,17 +36,36 @@ interface IPanelGroup {
   icon?: any;
 }
 
+interface ICommond {
+  /** 命令值 */
+  command: string;
+  /** 命令对象 */
+  CommandObject: any;
+}
+
 interface IProps {
   /** 基准宽度，如果存在将会以其去计算流程图的大小 */
   baseWidth?: number;
   /** 基准高度，如果存在将会以其去计算流程图的大小 */
   baseHeight?: number;
-  /** 自定义节点 */
-  registerNodeList?: IRegisterNode[];
-  /** 节点组 */
-  nodePanelGroup?: IPanelGroup[];
   /** 侧边节点 */
   groupNodeList?: any[];
+  /** 初始化渲染的节点, 这里请注意，如果节点是异步获取的请使用api设置节点 */
+  initNodes?: any[];
+  /** 初始化的边, 同节点 */
+  initEdges?: any[];
+  /** 布局走向 */
+  layout?: 'horizontal' | "vertical";
+  /** 返回图的实例 */
+  returnGraph?: (graph) => void;
+  /** 要监听的事件列表 */
+  listeners?: {[key: string]: any};
+  /** 初始化时是是否执行动画 */
+  animate?: boolean;
+  /** 自定义toolBar */
+  toolbar?: React.ReactElement;
+  /** 命令列表 */
+  commandList?: ICommond[];
 }
 
 const baseSize = {
@@ -51,8 +75,6 @@ const baseSize = {
 
 class FlowUtil {
   autoSize = () => {
-    console.log(document.body.clientHeight)
-    console.log(window.innerHeight)
     return {
       listWidth: baseSize.listWidth,
       listHeight: window.innerHeight - baseSize.toolHeight,
@@ -64,7 +86,7 @@ class FlowUtil {
   debounce = (func, timer) => {
     let timeout = null;
     return () => {
-      if(!timeout) {
+      if (!timeout) {
         timeout = setTimeout(func, timer);
         return;
       };
@@ -73,10 +95,19 @@ class FlowUtil {
     }
   }
 
-  throttle = () => {}
+  throttle = () => { }
 }
 
 class Flow extends Component<IProps> {
+
+  static defaultProps = {
+    groupNodeList: [],
+    initNodes: [],
+    initEdges: [],
+    listeners: {},
+    animate: false,
+    commandList: []
+  }
 
   /** toobar实例 */
   toolBar = React.createRef<HTMLDivElement>();
@@ -109,13 +140,12 @@ class Flow extends Component<IProps> {
   /** 自适应屏幕 */
   private autoSize() {
     const size = this.util.autoSize();
-    this.setState({size}, () => {
-      if(!this.workflowInstance) {
+    this.setState({ size }, () => {
+      if (!this.workflowInstance) {
         this.initWorkflow();
       }
     });
-    if(this.workflowInstance) {
-      console.log(size)
+    if (this.workflowInstance) {
       this.workflowInstance.graph.changeSize(size.flowWidth, size.flowHeight);
     }
   }
@@ -123,193 +153,74 @@ class Flow extends Component<IProps> {
   /** 初始化流程图 */
   initWorkflow = () => {
     const { size } = this.state;
+    const { initEdges, initNodes, layout, returnGraph, animate, commandList } = this.props;
 
-    const NodePanel = new AddNodePanel({
-      container: this.nodePanelContainer.current
-    });
+    const NodePanel = new AddNodePanel({ container: this.nodePanelContainer.current });
 
     const Command = new CommandPlugin();
 
-    const ToolBar = new ToolBarPlugin({
-      container: this.toolBar.current
-    })
+    const ToolBar = new ToolBarPlugin({ container: this.toolBar.current });
 
     const workflowInstance = new Workflow({
       container: this.workflowContainer.current,
       width: size.flowWidth,
       height: size.flowHeight,
       plugins: [Command, NodePanel, ToolBar],
-      layout: {
-        type: 'dagre',
-        rankdir: 'LR', // 可选，默认为图的中心
-        align: 'DL', // 可选
-        nodesep: 20, // 可选
-        ranksep: 50, // 可选
-        controlPoints: true, // 可选
-      },
-      initNodes: [
-        {
-          id: 'node1',
-          type: 'base-node',
-          size: [70, 70],
-          // x: 400,
-          // y: 200
-        },
-        {
-          id: 'node2',
-          type: 'flow-node',
-          size: [170, 70],
-          // x: 600,
-          // y: 200,
-          leftText: '1234567',
-          titleText: 'ajskdskkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
-          taskStatus: 'NAME',
-          taskStatusValue: 3,
-          rightText: 'asjdka'
-        },
-        {
-          id: 'node3',
-          type: 'flow-node',
-          size: [170, 70],
-          // x: 600,
-          // y: 200,
-          leftText: '1234567',
-          titleText: '获取数据',
-          taskStatus: '进行中我真的好',
-          rightText: 'asjdka'
-        },
-        {
-          id: 'node4',
-          type: 'flow-node',
-          size: [170, 70],
-          // x: 600,
-          // y: 200,
-          leftText: '1234567',
-          titleText: '获取数据',
-          taskStatus: '进行中',
-          rightText: 'asjdka'
-        },
-        {
-          id: 'node5',
-          type: 'flow-node',
-          size: [170, 70],
-          // x: 600,
-          // y: 200,
-          leftText: '1234567',
-          titleText: '获取数据',
-          taskStatus: '进行中',
-          rightText: 'asjdka'
-        },
-        {
-          id: 'node6',
-          type: 'flow-node',
-          size: [170, 70],
-          // x: 600,
-          // y: 200,
-          leftText: '1234567',
-          titleText: '获取数据',
-          taskStatus: '进行中',
-          rightText: 'asjdka'
-        },
-        {
-          id: 'node7',
-          type: 'flow-node',
-          size: [170, 70],
-          // x: 600,
-          // y: 200,
-          leftText: '1234567',
-          titleText: '获取数据',
-          taskStatus: '进行中',
-          rightText: 'asjdka'
-        },
-        {
-          id: 'node8',
-          type: 'flow-node',
-          size: [170, 70],
-          // x: 600,
-          // y: 200,
-          leftText: '1234567',
-          titleText: '获取数据111',
-          taskStatus: '进行中',
-          rightText: 'asjdka',
-          icon1: '/icon/aite.svg'
-        }
-      ],
-      initEdges: [
-        {
-          source: 'node1',
-          target: 'node2',
-          type: 'cover-cricle'
-        },
-        {
-          source: 'node1',
-          target: 'node3',
-          type: 'cover-cricle'
-        },
-        {
-          source: 'node2',
-          target: 'node4',
-          type: 'cover-cricle'
-        },
-        {
-          source: 'node3',
-          target: 'node4',
-          type: 'cvte-polyline'
-        },
-        {
-          source: 'node1',
-          target: 'node5',
-          type: 'cvte-polyline'
-        },
-        {
-          source: 'node5',
-          target: 'node6',
-          type: 'cvte-polyline'
-        },
-        {
-          source: 'node6',
-          target: 'node7',
-          type: 'cvte-polyline'
-        },
-        {
-          source: 'node5',
-          target: 'node8',
-          type: 'cvte-polyline'
-        }
-      ],
+      layout: layoutSetting[layout],
+      initNodes,
+      initEdges,
       registerNodes: [],
-      registerNodeList: this.props.registerNodeList
+      animate
       // edgeCallback: this.edgeCallback
     });
     workflowInstance.graph.setMode('edit');
     // workflowInstance.graph.fitCenter();
-    workflowInstance.graph.layout();
+    // workflowInstance.graph.layout();
     workflowInstance.graph.on('onDoubleClickNode', (e) => {
+      
+    });
+
+    workflowInstance.graph.on('onDargEdgeEnd', (e) => {
       console.log(e)
     });
     this.workflowInstance = workflowInstance;
+    this.registerListener();
 
-    RegisterCommand();
+    returnGraph && returnGraph(this.workflowInstance);
+    RegisterCommand(commandList);
+  }
+
+  /** 注册要监听的事件 */
+  registerListener = () => {
+    const { listeners } = this.props;
+
+    Object.keys(listeners).forEach(key => {
+      this.workflowInstance.graph.on(key, listeners[key]);
+    });
+  }
+
+  handleHeaderChange = (key) => {
+    
   }
 
   render() {
     return (
       <div className="xioo-flow" id="xioo-flow" ref={this.xiooFlow}>
         <div className="xioo-flow-header" ref={this.toolBar}>
-          <Header xiooFlow={this.xiooFlow} />
+          <Header xiooFlow={this.xiooFlow}>
+            {this.props.toolbar}
+          </Header>
         </div>
-        <div className="xioo-flow-body" style={{height: this.state.size.flowHeight}}>
-          <div className="xioo-flow-body-node" ref={this.nodePanelContainer} style={{width: this.state.size.listWidth}}>
-            <NodePanelGroup 
-              registerNodeList={this.props.registerNodeList} 
-              nodePanelGroup={this.props.nodePanelGroup} 
+        <div className="xioo-flow-body" style={{ height: this.state.size.flowHeight }}>
+          <div className="xioo-flow-body-node" ref={this.nodePanelContainer} style={{ width: this.state.size.listWidth }}>
+            <NodePanelGroup
               groupNodeList={this.props.groupNodeList}
             />
           </div>
-          <div 
-            className="xioo-flow-body-flow" 
-            ref={this.workflowContainer} 
-            style={{width: this.state.size.flowWidth, height: this.state.size.flowHeight}}
+          <div
+            className="xioo-flow-body-flow"
+            ref={this.workflowContainer}
+            style={{ width: this.state.size.flowWidth, height: this.state.size.flowHeight }}
           ></div>
           {/* <div className="xioo-flow-body-detail"></div> */}
         </div>
@@ -317,9 +228,9 @@ class Flow extends Component<IProps> {
     );
   }
 
-  
 
-  
+
+
 }
 
 export default Flow;

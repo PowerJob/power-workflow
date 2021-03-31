@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 
 const HtmlNodes = {
+  /** 矩形 */
   rect: (attr) => {
     return (
       <div className="panel-node rect">
@@ -21,6 +22,7 @@ const HtmlNodes = {
       </div>
     )
   },
+  /** 圆形 */
   circle: (attr) => {
     return (
       <div className="panel-node circle">
@@ -41,6 +43,7 @@ const HtmlNodes = {
       </div>
     )
   },
+  /** 三角形 */
   trigon: (attr) => {
     const position = {
       top: '▲',
@@ -54,7 +57,6 @@ const HtmlNodes = {
       left: '0 0 0 10px',
       right: '0 20px 8px 0'
     }
-
     const insertStyle = {
       inset: insert[attr.position]
     }
@@ -84,6 +86,27 @@ const HtmlNodes = {
         {attr.text}
       </div>
     )
+  },
+  /** 菱形 */
+  diamond: (attr) => {
+    return (
+      <div className="panel-node">
+        <div 
+          draggable="true" 
+          data-item={JSON.stringify(attr)} 
+          className={`node-item diamond`}
+          style={{
+            width: 35,
+            height: 35,
+            backgroundColor: attr.fill,
+            border: `2px solid ${attr.stroke}`,
+            borderRadius: 4
+          }}>
+            {attr.img && <img src={attr.img} className="panel-node-rect-icon diamond" />}
+        </div>
+        {attr.text}
+      </div>
+    )
   }
 }
 
@@ -92,13 +115,7 @@ interface IProps {
 }
 
 const HtmlNode: React.FC<IProps> = ({node}) => {
-  
-  // const attrs = useMemo(() => {
-  //   const { nodeName, nodeDesc } = props;
-    
-  // }, [props])
-
-  return HtmlNodes[node.thumbnail](node.attrs)
+  return HtmlNodes[node.thumbnail](node.attrs);
 }
 
 export default HtmlNode;

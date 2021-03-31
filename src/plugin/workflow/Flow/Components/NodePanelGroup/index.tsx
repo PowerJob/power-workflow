@@ -27,8 +27,6 @@ interface IPanelGroup {
 }
 
 interface IProps {
-  registerNodeList: IRegisterNode[];
-  nodePanelGroup: IPanelGroup[];
   groupNodeList: any[];
 }
 
@@ -39,51 +37,19 @@ class NodePanelGroup extends Component<IProps> {
 
   state = {
     panelVisible: {},
-    panelVisibleBlock: {},
     nodePanelGroup: []
   }
 
   componentDidMount() {
-    this.initVisible();
     this.initNodeData();
-  }
-
-  /** 初始化显示 */
-  initVisible = () => {
-    const { nodePanelGroup = [] } = this.props;
-    const { panelVisible, panelVisibleBlock } = this.state;
-    nodePanelGroup.forEach(item => {
-      panelVisible[item.groupKey] = item.defaultOpen ? item.defaultOpen : false;
-      panelVisibleBlock[item.groupKey] = item.defaultOpen ? item.defaultOpen : false;
-    });
-    this.setState({panelVisible, panelVisibleBlock});
   }
 
   /** 初始化节点数据 */
   initNodeData = () => {
-    let { registerNodeList, nodePanelGroup, groupNodeList } = this.props;
-
-    // nodePanelGroup = nodePanelGroup.map(group => {
-    //   registerNodeList.forEach(item => {
-    //     if(group.groupKey === item.groupKey) {
-    //       // 找到主图图形
-    //       const keyShape = item.nodeDesc.find(item => item.mainShape) || {};
-    //       const keyText = item.nodeDesc.find(item => item.mainText) || {};
-    //       const keyIcon = item.nodeDesc.find(item => item.mainIcon) || {};
-    //       const attrs = {
-    //         ...keyShape,
-    //         text: keyText.text,
-    //         nodeName: item.nodeName,
-    //         img: keyIcon.img,
-    //         nodeType: item.nodeType
-    //       }
-    //       group.nodes ? group.nodes.push(attrs) : group.nodes = [attrs];
-    //     }
-    //   })
-    //   return group;
-    // });
-
-    nodePanelGroup = groupNodeList.map(group => {
+    const { panelVisible } = this.state;
+    const {groupNodeList } = this.props;
+    const nodePanelGroup = groupNodeList.map(group => {
+      panelVisible[group.groupKey] = group.defaultOpen ? group.defaultOpen : false;
       group.nodes = group.nodes.map(item => {
         const attr = {
           ...(item.style || {}),
@@ -100,42 +66,32 @@ class NodePanelGroup extends Component<IProps> {
       return group;
     });
 
-    this.setState({nodePanelGroup});
+    this.setState({nodePanelGroup, panelVisible});
   }
 
   /** 分组菜单展开控制 */
   handlePanelHeader = (groupKey) => {
-    const { panelVisible, panelVisibleBlock } = this.state;
+    const { panelVisible } = this.state;
     panelVisible[groupKey] = !panelVisible[groupKey];
     this.setState({panelVisible});
-
-
-    if(panelVisible[groupKey]) {
-      panelVisibleBlock[groupKey] = !panelVisibleBlock[groupKey];
-      this.setState({panelVisibleBlock});
-      return;
-    }
-
-    let timeout = setTimeout(() => {
-      panelVisibleBlock[groupKey] = !panelVisibleBlock[groupKey];
-      this.setState({panelVisibleBlock});
-      clearTimeout(timeout)
-    }, 340);
   }
 
   /** 分组面板 */
   get NodePanel() {
     const { nodePanelGroup = [] } = this.state;
-    // ${this.state.panelVisibleBlock[item.groupKey] ? 'show' : 'hide'}
     return nodePanelGroup.map(item => {
       return (
         <div className="flow-group-panel" key={item.groupKey}>
           <div className="flow-group-panel-header" onClick={() => this.handlePanelHeader(item.groupKey)}>
-            <div className="flow-group-panel-header-title">
-              <div className="flow-group-panel-header-icon"></div>
+            <div className={`flow-group-panel-header-title ${this.state.panelVisible[item.groupKey] ? 'active' : ''}`}>
+              <div className="flow-group-panel-header-icon">
+                <span className={`fa ${item.groupIcon}`}></span>
+              </div>
               <div className="flow-group-panel-header-name">{item.groupName}</div>
             </div>
-            <div className="flow-group-panel-header-drop"></div>
+            <div className="flow-group-panel-header-drop">
+              <span className={`fa fa-chevron-right flow-drop-down ${this.state.panelVisible[item.groupKey] ? 'active' : ''}`} ></span>
+            </div>
           </div>
           <div 
             className={`flow-group-panel-body ${this.state.panelVisible[item.groupKey] ? 'active' : 'unactive'}`}
@@ -143,10 +99,6 @@ class NodePanelGroup extends Component<IProps> {
               height: `${this.state.panelVisible[item.groupKey] ? 84 * item.nodes.length + 'px' : '0px'}`
             }}
           >
-            {/* <div draggable="true" className="xioo-panel-item" data-item="flow-node"></div>
-            <div draggable="true" className="xioo-panel-item" data-item="flow-node"></div> */}
-            {/* <div draggable="true" className="xioo-panel-item" data-item="flow-node"></div> */}
-
             {
               item.nodes && item.nodes.map((node, index) => {
                 return  <NodeGenerate key={node.nodeType + index} node={node} />

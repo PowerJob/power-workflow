@@ -1,6 +1,6 @@
 {
-  "name": "power-workflow",
-  "version": "0.0.11",
+  "name": "max-workflow",
+  "version": "0.0.10",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@antv/g6": "^4.1.7",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "max-workflow": "0.0.9"
   }
 }

@@ -11,7 +11,14 @@ import UndoCommand from './undo';
 import RedoCommand from './redo';
 import DocatCommand from './docat';
 
-export default () => {
+interface ICommond {
+  /** 命令值 */
+  command: string;
+  /** 命令对象 */
+  CommandObject: any;
+}
+
+export default (commontList: ICommond[] = []) => {
   MacroCommand.registerCommand('reload', new ReloadCommand());
   MacroCommand.registerCommand('copy', new CopyCommand());
   MacroCommand.registerCommand('delete', new DeleteCommand());
@@ -23,4 +30,8 @@ export default () => {
   MacroCommand.registerCommand('undo', new UndoCommand());
   MacroCommand.registerCommand('redo', new RedoCommand());
   MacroCommand.registerCommand('docat', new DocatCommand());
+
+  commontList.forEach(item => {
+    MacroCommand.registerCommand(item.command, new item.CommandObject());
+  });
 }
