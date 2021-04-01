@@ -6,7 +6,7 @@ export default class FlowNode extends BaseNode {
   constructor(Grid) {
     super(Grid, true);
     this.register();
-  }
+  }  
   draw(cfg, group, inc) {
     this.size = this.computeNodeSize(cfg);
 
@@ -25,6 +25,8 @@ export default class FlowNode extends BaseNode {
 
     this.drawIcon(cfg.icon2, group, 24);
 
+    this.addShapeApi(cfg, group);
+
     return keyShape;
   }
 
@@ -33,6 +35,52 @@ export default class FlowNode extends BaseNode {
       this.drawStatusAnimateShape(cfg, group);
     }
   }
+
+  /** 更改节点内图形的方法 */
+  addShapeApi(cfg, group) {
+
+    // 通用的改变属性的方法
+    const updateShape = ({index, ...props}) => {
+      const currentShape = group.getChildByIndex(index);
+      currentShape.attr(props);
+    }
+
+    // 主题边框
+    const updateKeyShape = (props) => {
+      updateShape({index: 1, ...props});
+      return group;
+    }
+
+    // 左边文字
+    const updateLeftText = (props) => {
+      updateShape({index: 1, ...props});
+      return group;
+    }
+
+    // 主题文字
+    const updateTitleText = (props) => {
+      updateShape({index: 2, ...props});
+      return group;
+    }
+
+    // 右下角文字
+    const updateRightText = (props) => {
+      updateShape({index: 4, ...props});
+      return group;
+    }
+
+    // 图标
+    const updateIcon = (props) => {
+      updateShape({index: 5, ...props});
+    }
+
+    group.updateKeyShape = updateKeyShape;
+    group.updateLeftText = updateLeftText;
+    group.updateTitleText = updateTitleText;
+    group.updateRightText = updateRightText;
+    group.updateIcon = updateIcon;
+  }
+  
 
   /** 绘制左上角的文字 */
   drawLeftText(cfg, group) {
@@ -45,7 +93,7 @@ export default class FlowNode extends BaseNode {
       text: leftText,
       ...leftTextStyle
     }
-    group.addShape('text', {
+    return group.addShape('text', {
       attrs: attrs,
       name: 'power-left-text',
       className: 'node-left-text'
@@ -55,11 +103,11 @@ export default class FlowNode extends BaseNode {
   /** 绘制右下角的text */
   drawRightText(cfg, group) {
     const { rightText, rightTextStyle = {} } = cfg;
-    if(!rightText) return;
+    // if(!rightText) return;
     const { width, height } = this.size;
     const attrs = {
       ...nodeStyle.rightText.origin,
-      text: rightText,
+      text: rightText ? rightText : '',
       x: width - 12,
       y: height - 12,
       ...rightTextStyle
@@ -93,7 +141,7 @@ export default class FlowNode extends BaseNode {
       ...titleTextStyle
     }                               
 
-    group.addShape('text', {
+    return group.addShape('text', {
       attrs,
       name: 'power-title-text',
       className: 'node-title-text',

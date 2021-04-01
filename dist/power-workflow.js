@@ -227,6 +227,12 @@ exports.default = {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("@antv/util");
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -254,6 +260,17 @@ var __assign = (this && this.__assign) || function () {
         return t;
     };
     return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -326,6 +343,11 @@ var BaseNode = (function (_super) {
         return keyShape;
     };
     BaseNode.prototype.afterDraw = function (cfg, group, inc) {
+    };
+    BaseNode.prototype.updateShape = function (group, _a) {
+        var _b = _a.index, index = _b === void 0 ? 0 : _b, props = __rest(_a, ["index"]);
+        var currentShape = group.getChildByIndex(index);
+        currentShape.attr(props);
     };
     BaseNode.prototype.getTextWidth = function (text) {
         this.canvas = this.canvas || document.createElement("canvas");
@@ -418,12 +440,6 @@ var BaseNode = (function (_super) {
 }(registerNode_1.RegisterNode));
 exports.default = BaseNode;
 
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-module.exports = require("@antv/util");
 
 /***/ }),
 /* 4 */
@@ -885,7 +901,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var g6_1 = __importStar(__webpack_require__(12));
-var BaseNode_1 = __importDefault(__webpack_require__(2));
+var BaseNode_1 = __importDefault(__webpack_require__(3));
 var FlowNode_1 = __importDefault(__webpack_require__(15));
 var SimpleNode_1 = __importDefault(__webpack_require__(16));
 var nodes_1 = __importDefault(__webpack_require__(17));
@@ -893,7 +909,7 @@ var CircleNode_1 = __importDefault(__webpack_require__(21));
 var CvtePolyline1_1 = __importDefault(__webpack_require__(22));
 var circle_1 = __importDefault(__webpack_require__(23));
 var BaseAnchor_1 = __importDefault(__webpack_require__(24));
-var behavior_1 = __webpack_require__(27);
+var behavior_1 = __importDefault(__webpack_require__(27));
 var gird = new g6_1.default.Grid({});
 var CvteWorkflow = (function () {
     function CvteWorkflow(_a) {
@@ -1003,8 +1019,8 @@ var CvteWorkflow = (function () {
     CvteWorkflow.prototype.initMode = function () {
         return {
             default: ['drag-canvas', { type: "zoom-canvas", sensitivity: 1 }],
-            edit: ['drag-canvas', 'cover-hover-node', 'cover-hover-anchor', 'cover-drag-node', 'cover-drag-anchor', 'cover-select-node', 'cover-hover-edge', 'cover-delete-item', 'cover-add-node'],
-            view: ['drag-canvas', 'cover-select-node', 'cover-drag-node']
+            edit: ['drag-canvas', 'cover-hover-node', 'cover-hover-anchor', 'cover-drag-node', 'cover-drag-anchor', 'cover-select-node', 'cover-hover-edge', 'cover-delete-item', 'cover-add-node', 'cover-align-node'],
+            view: ['drag-canvas', 'cover-select-node', 'cover-drag-node', 'cover-align-node']
         };
     };
     CvteWorkflow.prototype.initData = function () {
@@ -1020,7 +1036,7 @@ var CvteWorkflow = (function () {
         __spreadArrays(nodes_1.default, [BaseNode_1.default, FlowNode_1.default], this.registerNodes).forEach(function (SelfNode) {
             new SelfNode(_this.G6);
         });
-        [behavior_1.HoverNode, behavior_1.HoverAnchor, behavior_1.DragNode, behavior_1.DragAnchor, behavior_1.SelectNode, behavior_1.HoverEdge, behavior_1.DeleteItem, behavior_1.addNode].forEach(function (SelfNode) {
+        behavior_1.default.forEach(function (SelfNode) {
             new SelfNode(_this.G6);
         });
         CvtePolyline1_1.default(g6_1.default);
@@ -1068,7 +1084,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var item_1 = __importDefault(__webpack_require__(14));
-var util_1 = __webpack_require__(3);
+var util_1 = __webpack_require__(2);
 var Anchor = (function (_super) {
     __extends(Anchor, _super);
     function Anchor(props) {
@@ -1142,10 +1158,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Workflow = exports.BaseNode = void 0;
 var Workflow_1 = __importDefault(__webpack_require__(8));
 exports.Workflow = Workflow_1.default;
-var Flow_1 = __importDefault(__webpack_require__(36));
-var BaseNode_1 = __importDefault(__webpack_require__(2));
+var Flow_1 = __importDefault(__webpack_require__(38));
+var BaseNode_1 = __importDefault(__webpack_require__(3));
 exports.BaseNode = BaseNode_1.default;
-var Toolbar_1 = __webpack_require__(62);
+var Toolbar_1 = __webpack_require__(64);
 Object.defineProperty(exports, "ToolGroup", { enumerable: true, get: function () { return Toolbar_1.ToolGroup; } });
 Object.defineProperty(exports, "ToolItem", { enumerable: true, get: function () { return Toolbar_1.ToolItem; } });
 exports.default = Flow_1.default;
@@ -1293,11 +1309,22 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var BaseNode_1 = __importDefault(__webpack_require__(2));
+var BaseNode_1 = __importDefault(__webpack_require__(3));
 var nodeStyle_1 = __importDefault(__webpack_require__(1));
 var FlowNode = (function (_super) {
     __extends(FlowNode, _super);
@@ -1316,6 +1343,7 @@ var FlowNode = (function (_super) {
         this.drawRightText(cfg, group);
         this.drawIcon(cfg.icon1, group, 6);
         this.drawIcon(cfg.icon2, group, 24);
+        this.addShapeApi(cfg, group);
         return keyShape;
     };
     FlowNode.prototype.afterDraw = function (cfg, group) {
@@ -1323,12 +1351,43 @@ var FlowNode = (function (_super) {
             this.drawStatusAnimateShape(cfg, group);
         }
     };
+    FlowNode.prototype.addShapeApi = function (cfg, group) {
+        var updateShape = function (_a) {
+            var index = _a.index, props = __rest(_a, ["index"]);
+            var currentShape = group.getChildByIndex(index);
+            currentShape.attr(props);
+        };
+        var updateKeyShape = function (props) {
+            updateShape(__assign({ index: 1 }, props));
+            return group;
+        };
+        var updateLeftText = function (props) {
+            updateShape(__assign({ index: 1 }, props));
+            return group;
+        };
+        var updateTitleText = function (props) {
+            updateShape(__assign({ index: 2 }, props));
+            return group;
+        };
+        var updateRightText = function (props) {
+            updateShape(__assign({ index: 4 }, props));
+            return group;
+        };
+        var updateIcon = function (props) {
+            updateShape(__assign({ index: 5 }, props));
+        };
+        group.updateKeyShape = updateKeyShape;
+        group.updateLeftText = updateLeftText;
+        group.updateTitleText = updateTitleText;
+        group.updateRightText = updateRightText;
+        group.updateIcon = updateIcon;
+    };
     FlowNode.prototype.drawLeftText = function (cfg, group) {
         var leftText = cfg.leftText, _a = cfg.leftTextStyle, leftTextStyle = _a === void 0 ? {} : _a;
         if (!leftText)
             return;
         var attrs = __assign(__assign(__assign({}, nodeStyle_1.default.leftText.origin), { text: leftText }), leftTextStyle);
-        group.addShape('text', {
+        return group.addShape('text', {
             attrs: attrs,
             name: 'power-left-text',
             className: 'node-left-text'
@@ -1336,10 +1395,8 @@ var FlowNode = (function (_super) {
     };
     FlowNode.prototype.drawRightText = function (cfg, group) {
         var rightText = cfg.rightText, _a = cfg.rightTextStyle, rightTextStyle = _a === void 0 ? {} : _a;
-        if (!rightText)
-            return;
         var _b = this.size, width = _b.width, height = _b.height;
-        var attrs = __assign(__assign(__assign({}, nodeStyle_1.default.rightText.origin), { text: rightText, x: width - 12, y: height - 12 }), rightTextStyle);
+        var attrs = __assign(__assign(__assign({}, nodeStyle_1.default.rightText.origin), { text: rightText ? rightText : '', x: width - 12, y: height - 12 }), rightTextStyle);
         group.addShape('text', {
             attrs: attrs,
             name: 'power-right-text',
@@ -1356,7 +1413,7 @@ var FlowNode = (function (_super) {
             titleText = titleText.slice(0, 24) + '...';
         }
         var attrs = __assign(__assign(__assign({}, nodeStyle_1.default.titleText.origin), { text: titleText, x: width / 2, y: height / 2 }), titleTextStyle);
-        group.addShape('text', {
+        return group.addShape('text', {
             attrs: attrs,
             name: 'power-title-text',
             className: 'node-title-text',
@@ -1660,7 +1717,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var BaseNode_1 = __importDefault(__webpack_require__(2));
+var BaseNode_1 = __importDefault(__webpack_require__(3));
 var nodeStyle_1 = __importDefault(__webpack_require__(1));
 var MaxCircleNode = (function (_super) {
     __extends(MaxCircleNode, _super);
@@ -1674,7 +1731,8 @@ var MaxCircleNode = (function (_super) {
         var width = this.size.width;
         var height = this.size.height;
         var _a = cfg.style, style = _a === void 0 ? {} : _a;
-        var attrs = __assign(__assign(__assign({}, nodeStyle_1.default.default), { x: style.r || 20, y: style.r || 20, r: style.r || 20, fill: '#0577BB', stroke: '#028080' }), style);
+        var _b = style.r, r = _b === void 0 ? 20 : _b;
+        var attrs = __assign(__assign(__assign(__assign({}, nodeStyle_1.default.default), { fill: '#0577BB', stroke: '#028080' }), style), { x: r, y: r, r: r });
         var keyShape = group.addShape('circle', {
             attrs: attrs,
             name: 'max-circle-node',
@@ -1682,7 +1740,25 @@ var MaxCircleNode = (function (_super) {
         });
         this.initAnchor(group);
         this.drawIcon(cfg, group);
+        this.drawText(cfg, group);
+        this.addShapeApi(cfg, group);
         return keyShape;
+    };
+    MaxCircleNode.prototype.addShapeApi = function (cfg, group) {
+        var _this = this;
+        var updateKeyShape = function (props) {
+            _this.updateShape(group, __assign({ index: 0 }, props));
+            return group;
+        };
+        var updateIcon = function (props) {
+            _this.updateShape(group, __assign({ index: 1 }, props));
+        };
+        var updateText = function (props) {
+            _this.updateShape(group, __assign({ index: 2 }, props));
+        };
+        group.updateKeyShape = updateKeyShape;
+        group.updateIcon = updateIcon;
+        group.updateText = updateText;
     };
     MaxCircleNode.prototype.drawIcon = function (cfg, group) {
         group.addShape('image', {
@@ -1690,6 +1766,13 @@ var MaxCircleNode = (function (_super) {
             name: 'circle-image',
             capture: true,
             draggable: true
+        });
+    };
+    MaxCircleNode.prototype.drawText = function (cfg, group) {
+        var text = cfg.text, _a = cfg.style, style = _a === void 0 ? {} : _a;
+        var _b = style.textStyle, textStyle = _b === void 0 ? {} : _b, _c = style.r, r = _c === void 0 ? 20 : _c;
+        group.addShape('text', {
+            attrs: __assign({ text: text ? text : '', x: r, y: r * 2 + 8, textAlign: 'center', textBaseline: 'middle', fill: '#666', fontSize: 10 }, textStyle),
         });
     };
     return MaxCircleNode;
@@ -1731,7 +1814,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var BaseNode_1 = __importDefault(__webpack_require__(2));
+var BaseNode_1 = __importDefault(__webpack_require__(3));
 var nodeStyle_1 = __importDefault(__webpack_require__(1));
 var MaxCircleNode = (function (_super) {
     __extends(MaxCircleNode, _super);
@@ -1871,7 +1954,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var BaseNode_1 = __importDefault(__webpack_require__(2));
+var BaseNode_1 = __importDefault(__webpack_require__(3));
 var nodeStyle_1 = __importDefault(__webpack_require__(1));
 var MaxDiamondNode = (function (_super) {
     __extends(MaxDiamondNode, _super);
@@ -1894,7 +1977,6 @@ var MaxDiamondNode = (function (_super) {
         ];
         var attrs = __assign(__assign(__assign({}, nodeStyle_1.default.default), { path: [
                 ['M', dot, 0],
-                ['Q',],
                 ['L', 0, dot],
                 ['L', dot, sideLength],
                 ['L', sideLength, dot],
@@ -1906,9 +1988,26 @@ var MaxDiamondNode = (function (_super) {
             className: 'max-diamond-node'
         });
         this.initAnchor(group, cfg);
-        this.drawText(cfg, group);
         this.drawIcon(cfg, group);
+        this.drawText(cfg, group);
+        this.addShapeApi(cfg, group);
         return keyShape;
+    };
+    MaxDiamondNode.prototype.addShapeApi = function (cfg, group) {
+        var _this = this;
+        var updateKeyShape = function (props) {
+            _this.updateShape(group, __assign({ index: 0 }, props));
+            return group;
+        };
+        var updateIcon = function (props) {
+            _this.updateShape(group, __assign({ index: 1 }, props));
+        };
+        var updateText = function (props) {
+            _this.updateShape(group, __assign({ index: 2 }, props));
+        };
+        group.updateKeyShape = updateKeyShape;
+        group.updateIcon = updateIcon;
+        group.updateText = updateText;
     };
     MaxDiamondNode.prototype.drawIcon = function (cfg, group) {
         var _a = cfg.style, _b = _a.sideLength, sideLength = _b === void 0 ? 100 : _b, _c = _a.position, position = _c === void 0 ? 'top' : _c;
@@ -1926,8 +2025,7 @@ var MaxDiamondNode = (function (_super) {
     };
     MaxDiamondNode.prototype.drawText = function (cfg, group) {
         var _a = cfg.style, style = _a === void 0 ? {} : _a;
-        var _b = style.sideLength, sideLength = _b === void 0 ? 50 : _b;
-        var textStyle = style.textStyle;
+        var _b = style.sideLength, sideLength = _b === void 0 ? 50 : _b, _c = style.textStyle, textStyle = _c === void 0 ? {} : _c;
         if (cfg.text) {
             group.addShape('text', {
                 attrs: __assign({ x: sideLength / 2, y: sideLength + 8, textAlign: 'center', textBaseline: 'middle', text: cfg.text, fill: '#666', fontSize: 10 }, textStyle),
@@ -2484,23 +2582,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNode = exports.DeleteItem = exports.HoverEdge = exports.SelectNode = exports.DragAnchor = exports.DragNode = exports.HoverAnchor = exports.HoverNode = void 0;
 var hover_1 = __importDefault(__webpack_require__(28));
-exports.HoverNode = hover_1.default;
 var hover_2 = __importDefault(__webpack_require__(29));
-exports.HoverAnchor = hover_2.default;
 var drag_1 = __importDefault(__webpack_require__(30));
-exports.DragNode = drag_1.default;
 var drag_2 = __importDefault(__webpack_require__(31));
-exports.DragAnchor = drag_2.default;
 var select_1 = __importDefault(__webpack_require__(32));
-exports.SelectNode = select_1.default;
 var hover_3 = __importDefault(__webpack_require__(33));
-exports.HoverEdge = hover_3.default;
 var delete_1 = __importDefault(__webpack_require__(34));
-exports.DeleteItem = delete_1.default;
 var addNode_1 = __importDefault(__webpack_require__(35));
-exports.addNode = addNode_1.default;
+var align_1 = __importDefault(__webpack_require__(36));
+exports.default = [hover_1.default, hover_2.default, drag_1.default, drag_2.default, select_1.default, hover_3.default, delete_1.default, addNode_1.default, align_1.default];
 
 
 /***/ }),
@@ -2684,6 +2775,7 @@ var Event = {
         MacroCommand && MacroCommand.executeCommand('docat', { graph: this.graph });
         this.point = null;
         this.origin = null;
+        this.graph.emit('afternodedragend');
     },
     moveDelegate: function (item, x, y) {
         var shape = item.get('delegateShape');
@@ -2711,6 +2803,7 @@ var Event = {
         }
         shape.attr({ x: x, y: y });
         this.graph.paint();
+        this.graph.emit('afternodedrag', shape);
     }
 };
 var DragNode = (function (_super) {
@@ -3181,6 +3274,334 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var util_1 = __webpack_require__(2);
+var matrix_util_1 = __webpack_require__(37);
+var registerBehavior_1 = __importDefault(__webpack_require__(0));
+var Event = {
+    onDrag: function (shape) {
+        this._clearAlignLine();
+        this._itemAlign(shape);
+    },
+    onDragEnd: function () {
+        this._clearAlignLine();
+    },
+    getDefaultCfg: function () {
+        return {
+            alignLineStyle: { stroke: '#540000', lineWidth: 1 },
+            tolerance: 10,
+            _alignLines: [],
+        };
+    },
+    _itemAlign: function (item) {
+        var _this = this;
+        var bbox = item.getBBox();
+        var ct = { x: bbox.x + bbox.width / 2, y: bbox.y };
+        var cc = { x: bbox.x + bbox.width / 2, y: bbox.y + bbox.height / 2 };
+        var cb = { x: bbox.x + bbox.width / 2, y: bbox.y + bbox.height };
+        var lc = { x: bbox.x, y: bbox.y + bbox.height / 2 };
+        var rc = { x: bbox.x + bbox.width, y: bbox.y + bbox.height / 2 };
+        var nodes = item._attrs && item._attrs.nodeId ? this.graph.getNodes().filter(function (n) { return n.get('id') !== item._attrs.nodeId; }) : this.graph.getNodes();
+        util_1.each(nodes, function (node) {
+            var horizontalLines = [];
+            var verticalLines = [];
+            var p = null;
+            var bbox1 = node.getBBox();
+            util_1.each(_this.getHorizontalLines(bbox1), function (line) {
+                horizontalLines.push(_this.getDistance(line, ct));
+                horizontalLines.push(_this.getDistance(line, cc));
+                horizontalLines.push(_this.getDistance(line, cb));
+            });
+            util_1.each(_this.getVerticalLines(bbox1), function (line) {
+                verticalLines.push(_this.getDistance(line, lc));
+                verticalLines.push(_this.getDistance(line, cc));
+                verticalLines.push(_this.getDistance(line, rc));
+            });
+            horizontalLines.sort(function (a, b) { return a.dis - b.dis; });
+            verticalLines.sort(function (a, b) { return a.dis - b.dis; });
+            if (horizontalLines.length > 0 && horizontalLines[0].dis < _this.tolerance) {
+                item.attr({ y: horizontalLines[0].line[1] - horizontalLines[0].point.y + bbox.y });
+                p = { horizontals: [horizontalLines[0]] };
+                for (var i = 1; i < 3; i++)
+                    horizontalLines[0].dis === horizontalLines[i].dis && p.horizontals.push(horizontalLines[i]);
+            }
+            if (verticalLines.length > 0 && verticalLines[0].dis < _this.tolerance) {
+                item.attr({ x: verticalLines[0].line[0] - verticalLines[0].point.x + bbox.x });
+                p ? p.verticals = [verticalLines[0]] : p = { verticals: [verticalLines[0]] };
+                for (var i = 1; i < 3; i++)
+                    verticalLines[0].dis === verticalLines[i].dis && p.verticals.push(verticalLines[i]);
+            }
+            if (p) {
+                p.bbox = bbox;
+                _this._addAlignLine(p);
+            }
+        });
+    },
+    _addAlignLine: function (p) {
+        var group = this.graph.get('group');
+        var bbox = p.bbox;
+        var lineStyle = this.alignLineStyle;
+        var lineArr = this._alignLines;
+        if (p.horizontals) {
+            util_1.each(p.horizontals, function (lineObj) {
+                var line = lineObj.line;
+                var point = lineObj.point;
+                var lineHalf = (line[0] + line[2]) / 2;
+                var x1, x2;
+                if (point.x < lineHalf) {
+                    x1 = point.x - bbox.width / 2;
+                    x2 = Math.max(line[0], line[2]);
+                }
+                else {
+                    x1 = point.x + bbox.width / 2;
+                    x2 = Math.min(line[0], line[2]);
+                }
+                var shape = group.addShape('line', { attrs: util_1.mix({ x1: x1, y1: line[1], x2: x2, y2: line[1] }, lineStyle), capture: false });
+                lineArr.push(shape);
+            });
+        }
+        if (p.verticals) {
+            util_1.each(p.verticals, function (lineObj) {
+                var line = lineObj.line;
+                var point = lineObj.point;
+                var lineHalf = (line[1] + line[3]) / 2;
+                var y1, y2;
+                if (point.y < lineHalf) {
+                    y1 = point.y - bbox.height / 2;
+                    y2 = Math.max(line[1], line[3]);
+                }
+                else {
+                    y1 = point.y + bbox.height / 2;
+                    y2 = Math.min(line[1], line[3]);
+                }
+                var shape = group.addShape('line', { attrs: util_1.mix({ x1: line[0], y1: y1, x2: line[0], y2: y2 }, lineStyle), capture: false });
+                lineArr.push(shape);
+            });
+        }
+    },
+    getHorizontalLines: function (bbox) {
+        return [
+            [bbox.minX, bbox.minY, bbox.maxX, bbox.minY],
+            [bbox.minX, bbox.centerY, bbox.maxX, bbox.centerY],
+            [bbox.minX, bbox.maxY, bbox.maxX, bbox.maxY],
+        ];
+    },
+    getVerticalLines: function (bbox) {
+        return [
+            [bbox.minX, bbox.minY, bbox.minX, bbox.maxY],
+            [bbox.centerX, bbox.minY, bbox.centerX, bbox.maxY],
+            [bbox.maxX, bbox.minY, bbox.maxX, bbox.maxY],
+        ];
+    },
+    getDistance: function (line, point) {
+        return { line: line, point: point, dis: this.pointLineDistance(line[0], line[1], line[2], line[3], point.x, point.y) };
+    },
+    pointLineDistance: function (lineX1, lineY1, lineX2, lineY2, pointX, pointY) {
+        var lineLength = [lineX2 - lineX1, lineY2 - lineY1];
+        if (matrix_util_1.vec2.exactEquals(lineLength, [0, 0]))
+            return NaN;
+        var s = [-lineLength[1], lineLength[0]];
+        matrix_util_1.vec2.normalize(s, s);
+        return Math.abs(matrix_util_1.vec2.dot([pointX - lineX1, pointY - lineY1], s));
+    },
+    _clearAlignLine: function () {
+        util_1.each(this._alignLines, function (line) {
+            line.remove();
+        });
+        this._alignLines = [];
+        this.graph.paint();
+    },
+};
+var AlignNode = (function (_super) {
+    __extends(AlignNode, _super);
+    function AlignNode(Grid) {
+        var _this = _super.call(this, Grid) || this;
+        _this.name = 'cover-align-node';
+        _this.register(Event);
+        return _this;
+    }
+    AlignNode.prototype.getEvents = function () {
+        return {
+            'afternodedrag': 'onDrag',
+            'afternodedragend': 'onDragEnd'
+        };
+    };
+    return AlignNode;
+}(registerBehavior_1.default));
+exports.default = AlignNode;
+function a(G6) {
+    var mix = G6.Util.mix;
+    G6.registerBehavior('itemAlign', {
+        getDefaultCfg: function () {
+            return {
+                alignLineStyle: { stroke: '#FA8C16', lineWidth: 1 },
+                tolerance: 10,
+                _alignLines: [],
+            };
+        },
+        getEvents: function () {
+            return {
+                'afternodedrag': 'onDrag',
+                'afternodedragend': 'onDragEnd',
+            };
+        },
+        onDrag: function (shape) {
+            this._clearAlignLine();
+            this._itemAlign(shape);
+        },
+        onDragEnd: function () {
+            this._clearAlignLine();
+        },
+        _itemAlign: function (item) {
+            var _this = this;
+            var bbox = item.getBBox();
+            var ct = { x: bbox.x + bbox.width / 2, y: bbox.y };
+            var cc = { x: bbox.x + bbox.width / 2, y: bbox.y + bbox.height / 2 };
+            var cb = { x: bbox.x + bbox.width / 2, y: bbox.y + bbox.height };
+            var lc = { x: bbox.x, y: bbox.y + bbox.height / 2 };
+            var rc = { x: bbox.x + bbox.width, y: bbox.y + bbox.height / 2 };
+            var nodes = item._attrs && item._attrs.nodeId ? this.graph.getNodes().filter(function (n) { return n.get('id') !== item._attrs.nodeId; }) : this.graph.getNodes();
+            util_1.each(nodes, function (node) {
+                var horizontalLines = [];
+                var verticalLines = [];
+                var p = null;
+                var bbox1 = node.getBBox();
+                util_1.each(_this.getHorizontalLines(bbox1), function (line) {
+                    horizontalLines.push(_this.getDistance(line, ct));
+                    horizontalLines.push(_this.getDistance(line, cc));
+                    horizontalLines.push(_this.getDistance(line, cb));
+                });
+                util_1.each(_this.getVerticalLines(bbox1), function (line) {
+                    verticalLines.push(_this.getDistance(line, lc));
+                    verticalLines.push(_this.getDistance(line, cc));
+                    verticalLines.push(_this.getDistance(line, rc));
+                });
+                horizontalLines.sort(function (a, b) { return a.dis - b.dis; });
+                verticalLines.sort(function (a, b) { return a.dis - b.dis; });
+                if (horizontalLines.length > 0 && horizontalLines[0].dis < _this.tolerance) {
+                    item.attr({ y: horizontalLines[0].line[1] - horizontalLines[0].point.y + bbox.y });
+                    p = { horizontals: [horizontalLines[0]] };
+                    for (var i = 1; i < 3; i++)
+                        horizontalLines[0].dis === horizontalLines[i].dis && p.horizontals.push(horizontalLines[i]);
+                }
+                if (verticalLines.length > 0 && verticalLines[0].dis < _this.tolerance) {
+                    item.attr({ x: verticalLines[0].line[0] - verticalLines[0].point.x + bbox.x });
+                    p ? p.verticals = [verticalLines[0]] : p = { verticals: [verticalLines[0]] };
+                    for (var i = 1; i < 3; i++)
+                        verticalLines[0].dis === verticalLines[i].dis && p.verticals.push(verticalLines[i]);
+                }
+                if (p) {
+                    p.bbox = bbox;
+                    _this._addAlignLine(p);
+                }
+            });
+        },
+        _addAlignLine: function (p) {
+            var group = this.graph.get('group');
+            var bbox = p.bbox;
+            var lineStyle = this.alignLineStyle;
+            var lineArr = this._alignLines;
+            if (p.horizontals) {
+                util_1.each(p.horizontals, function (lineObj) {
+                    var line = lineObj.line;
+                    var point = lineObj.point;
+                    var lineHalf = (line[0] + line[2]) / 2;
+                    var x1, x2;
+                    if (point.x < lineHalf) {
+                        x1 = point.x - bbox.width / 2;
+                        x2 = Math.max(line[0], line[2]);
+                    }
+                    else {
+                        x1 = point.x + bbox.width / 2;
+                        x2 = Math.min(line[0], line[2]);
+                    }
+                    var shape = group.addShape('line', { attrs: mix({ x1: x1, y1: line[1], x2: x2, y2: line[1] }, lineStyle), capture: false });
+                    lineArr.push(shape);
+                });
+            }
+            if (p.verticals) {
+                util_1.each(p.verticals, function (lineObj) {
+                    var line = lineObj.line;
+                    var point = lineObj.point;
+                    var lineHalf = (line[1] + line[3]) / 2;
+                    var y1, y2;
+                    if (point.y < lineHalf) {
+                        y1 = point.y - bbox.height / 2;
+                        y2 = Math.max(line[1], line[3]);
+                    }
+                    else {
+                        y1 = point.y + bbox.height / 2;
+                        y2 = Math.min(line[1], line[3]);
+                    }
+                    var shape = group.addShape('line', { attrs: mix({ x1: line[0], y1: y1, x2: line[0], y2: y2 }, lineStyle), capture: false });
+                    lineArr.push(shape);
+                });
+            }
+        },
+        getHorizontalLines: function (bbox) {
+            return [
+                [bbox.minX, bbox.minY, bbox.maxX, bbox.minY],
+                [bbox.minX, bbox.centerY, bbox.maxX, bbox.centerY],
+                [bbox.minX, bbox.maxY, bbox.maxX, bbox.maxY],
+            ];
+        },
+        getVerticalLines: function (bbox) {
+            return [
+                [bbox.minX, bbox.minY, bbox.minX, bbox.maxY],
+                [bbox.centerX, bbox.minY, bbox.centerX, bbox.maxY],
+                [bbox.maxX, bbox.minY, bbox.maxX, bbox.maxY],
+            ];
+        },
+        getDistance: function (line, point) {
+            return { line: line, point: point, dis: this.pointLineDistance(line[0], line[1], line[2], line[3], point.x, point.y) };
+        },
+        pointLineDistance: function (lineX1, lineY1, lineX2, lineY2, pointX, pointY) {
+            var lineLength = [lineX2 - lineX1, lineY2 - lineY1];
+            if (matrix_util_1.vec2.exactEquals(lineLength, [0, 0]))
+                return NaN;
+            var s = [-lineLength[1], lineLength[0]];
+            matrix_util_1.vec2.normalize(s, s);
+            return Math.abs(matrix_util_1.vec2.dot([pointX - lineX1, pointY - lineY1], s));
+        },
+        _clearAlignLine: function () {
+            util_1.each(this._alignLines, function (line) {
+                line.remove();
+            });
+            this._alignLines = [];
+            this.graph.paint();
+        },
+    });
+}
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
+
+module.exports = require("@antv/matrix-util");
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -3206,14 +3627,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(__webpack_require__(4));
 var Workflow_1 = __importDefault(__webpack_require__(8));
-var Header_1 = __importDefault(__webpack_require__(37));
-var NodePanelGroup_1 = __importDefault(__webpack_require__(40));
-var AddNodePanel_1 = __importDefault(__webpack_require__(44));
-var CommandPlugin_1 = __importDefault(__webpack_require__(45));
-var ToolBarPlugin_1 = __importDefault(__webpack_require__(46));
-var config_1 = __webpack_require__(47);
-var command_1 = __importDefault(__webpack_require__(48));
-__webpack_require__(60);
+var Header_1 = __importDefault(__webpack_require__(39));
+var NodePanelGroup_1 = __importDefault(__webpack_require__(42));
+var AddNodePanel_1 = __importDefault(__webpack_require__(46));
+var CommandPlugin_1 = __importDefault(__webpack_require__(47));
+var ToolBarPlugin_1 = __importDefault(__webpack_require__(48));
+var config_1 = __webpack_require__(49);
+var command_1 = __importDefault(__webpack_require__(50));
+__webpack_require__(62);
 var baseSize = {
     listWidth: 200,
     toolHeight: 48
@@ -3340,7 +3761,7 @@ exports.default = Flow;
 
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3379,7 +3800,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(__webpack_require__(4));
-__webpack_require__(38);
+__webpack_require__(40);
 var index = (function (_super) {
     __extends(index, _super);
     function index() {
@@ -3444,11 +3865,11 @@ exports.default = index;
 
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var api = __webpack_require__(6);
-            var content = __webpack_require__(39);
+            var content = __webpack_require__(41);
 
             content = content.__esModule ? content.default : content;
 
@@ -3468,7 +3889,7 @@ var update = api(content, options);
 module.exports = content.locals || {};
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
@@ -3481,7 +3902,7 @@ module.exports = exports;
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3534,8 +3955,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(__webpack_require__(4));
-var NodeGenerate_1 = __importDefault(__webpack_require__(41));
-__webpack_require__(42);
+var NodeGenerate_1 = __importDefault(__webpack_require__(43));
+__webpack_require__(44);
 var NodePanelGroup = (function (_super) {
     __extends(NodePanelGroup, _super);
     function NodePanelGroup() {
@@ -3600,7 +4021,7 @@ exports.default = NodePanelGroup;
 
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3693,11 +4114,11 @@ exports.default = HtmlNode;
 
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var api = __webpack_require__(6);
-            var content = __webpack_require__(43);
+            var content = __webpack_require__(45);
 
             content = content.__esModule ? content.default : content;
 
@@ -3717,7 +4138,7 @@ var update = api(content, options);
 module.exports = content.locals || {};
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
@@ -3730,7 +4151,7 @@ module.exports = exports;
 
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3747,7 +4168,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var util_1 = __webpack_require__(3);
+var util_1 = __webpack_require__(2);
 var AddNodePanel = (function () {
     function AddNodePanel(cfgs) {
         this._cfgs = util_1.deepMix(this.getDefaultCfg(), cfgs);
@@ -3789,7 +4210,7 @@ exports.default = AddNodePanel;
 
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3798,7 +4219,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var util_1 = __webpack_require__(3);
+var util_1 = __webpack_require__(2);
 var MacroCommand_1 = __importDefault(__webpack_require__(10));
 var CommandPlugin = (function () {
     function CommandPlugin(cfgs) {
@@ -3825,7 +4246,7 @@ exports.default = CommandPlugin;
 
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3842,7 +4263,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var util_1 = __webpack_require__(3);
+var util_1 = __webpack_require__(2);
 var select = ['copy', 'delete'];
 var TooBarPlugin = (function () {
     function TooBarPlugin(cfgs) {
@@ -3893,7 +4314,7 @@ exports.default = TooBarPlugin;
 
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3925,7 +4346,7 @@ exports.layoutSetting = {
 
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3935,17 +4356,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var MacroCommand_1 = __importDefault(__webpack_require__(10));
-var reload_1 = __importDefault(__webpack_require__(49));
-var copy_1 = __importDefault(__webpack_require__(50));
-var delete_1 = __importDefault(__webpack_require__(51));
-var blow_1 = __importDefault(__webpack_require__(52));
-var fitView_1 = __importDefault(__webpack_require__(53));
-var originSize_1 = __importDefault(__webpack_require__(54));
-var layout_1 = __importDefault(__webpack_require__(55));
-var fullScreen_1 = __importDefault(__webpack_require__(56));
-var undo_1 = __importDefault(__webpack_require__(57));
-var redo_1 = __importDefault(__webpack_require__(58));
-var docat_1 = __importDefault(__webpack_require__(59));
+var reload_1 = __importDefault(__webpack_require__(51));
+var copy_1 = __importDefault(__webpack_require__(52));
+var delete_1 = __importDefault(__webpack_require__(53));
+var blow_1 = __importDefault(__webpack_require__(54));
+var fitView_1 = __importDefault(__webpack_require__(55));
+var originSize_1 = __importDefault(__webpack_require__(56));
+var layout_1 = __importDefault(__webpack_require__(57));
+var fullScreen_1 = __importDefault(__webpack_require__(58));
+var undo_1 = __importDefault(__webpack_require__(59));
+var redo_1 = __importDefault(__webpack_require__(60));
+var docat_1 = __importDefault(__webpack_require__(61));
 exports.default = (function (commontList) {
     if (commontList === void 0) { commontList = []; }
     MacroCommand_1.default.registerCommand('reload', new reload_1.default());
@@ -3966,7 +4387,7 @@ exports.default = (function (commontList) {
 
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3984,7 +4405,7 @@ exports.default = ReloadCommand;
 
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4023,7 +4444,7 @@ exports.default = CopyCommand;
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4050,7 +4471,7 @@ exports.default = DeleteCommand;
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4071,7 +4492,7 @@ exports.default = BlowCommand;
 
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4090,7 +4511,7 @@ exports.default = FitViewCommand;
 
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4109,7 +4530,7 @@ exports.default = OriginSizeCommand;
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4128,7 +4549,7 @@ exports.default = LayoutCommand;
 
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4156,13 +4577,13 @@ exports.default = FullScreenCommand;
 
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util_1 = __webpack_require__(3);
+var util_1 = __webpack_require__(2);
 var UndoCommand = (function () {
     function UndoCommand() {
     }
@@ -4259,13 +4680,13 @@ exports.default = UndoCommand;
 
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var util_1 = __webpack_require__(3);
+var util_1 = __webpack_require__(2);
 var RedoCommand = (function () {
     function RedoCommand() {
     }
@@ -4369,7 +4790,7 @@ exports.default = RedoCommand;
 
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4408,11 +4829,11 @@ exports.default = CopyCommand;
 
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var api = __webpack_require__(6);
-            var content = __webpack_require__(61);
+            var content = __webpack_require__(63);
 
             content = content.__esModule ? content.default : content;
 
@@ -4432,7 +4853,7 @@ var update = api(content, options);
 module.exports = content.locals || {};
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
@@ -4445,7 +4866,7 @@ module.exports = exports;
 
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4455,14 +4876,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ToolItem = exports.ToolGroup = void 0;
-var ToolGroup_1 = __importDefault(__webpack_require__(63));
+var ToolGroup_1 = __importDefault(__webpack_require__(65));
 exports.ToolGroup = ToolGroup_1.default;
-var ToolItem_1 = __importDefault(__webpack_require__(65));
+var ToolItem_1 = __importDefault(__webpack_require__(67));
 exports.ToolItem = ToolItem_1.default;
 
 
 /***/ }),
-/* 63 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4471,12 +4892,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ToolGroup_1 = __importDefault(__webpack_require__(64));
+var ToolGroup_1 = __importDefault(__webpack_require__(66));
 exports.default = ToolGroup_1.default;
 
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4524,7 +4945,7 @@ exports.default = ToolGroup;
 
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4533,12 +4954,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ToolItem_1 = __importDefault(__webpack_require__(66));
+var ToolItem_1 = __importDefault(__webpack_require__(68));
 exports.default = ToolItem_1.default;
 
 
 /***/ }),
-/* 66 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

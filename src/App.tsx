@@ -680,11 +680,13 @@ export default class App extends Component {
     workflow.graph.refresh();
 
     workflow.graph.on('onDoubleClickNode', (item) => {
+      
       // console.log(JSON.stringify(this.workflow.graph.save()));
       // this.setState({ visible: true });
       // this.doubleNode = item;
-      // this.doubleNodeGroup = item.get('group');
-
+      const group = item.get('group');
+      // group.updateLeftText({ text: '111111' }).updateTitleText({ text: '2222' });
+      group.updateText({text: '1111'})
 
 
       // workflow.graph.updateItem(item, {

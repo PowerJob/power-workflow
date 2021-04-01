@@ -13,18 +13,15 @@ export default class MaxCircleNode extends BaseNode {
     let width = this.size.width;
     let height = this.size.height;
     const { style = {} } = cfg;
+    const { r = 20 } = style;
     const attrs = {
-      // ...nodeStyle.base.origin,
-      // width,
-      // height,
-      // ...style
       ...nodeStyle.default,
-      x: style.r || 20,
-      y: style.r || 20,
-      r: style.r || 20,
       fill: '#0577BB',
       stroke: '#028080',
-      ...style
+      ...style,
+      x: r,
+      y: r,
+      r: r,
     }
     const keyShape = group.addShape('circle', {
       attrs: attrs,
@@ -36,7 +33,35 @@ export default class MaxCircleNode extends BaseNode {
 
     this.drawIcon(cfg, group);
 
+    this.drawText(cfg, group);
+
+    this.addShapeApi(cfg, group);
+
     return keyShape;
+  }
+
+  /** addShapeApi */
+  addShapeApi(cfg, group) {
+    // 主题边框
+    const updateKeyShape = (props) => {
+      this.updateShape(group, {index: 0, ...props})
+      return group;
+    }
+
+    // 图标
+    const updateIcon = (props) => {
+      this.updateShape(group, {index: 1, ...props})
+    }
+
+    // 文字
+    const updateText = (props) => {
+      this.updateShape(group, {index: 2, ...props})
+    }
+
+    group.updateKeyShape = updateKeyShape;
+    group.updateIcon = updateIcon;
+    group.updateText = updateText;
+
   }
 
   /** 绘制图标 */
@@ -55,4 +80,22 @@ export default class MaxCircleNode extends BaseNode {
       draggable: true
     })
   }
+
+  /** 绘制文字 */
+  drawText(cfg, group) {
+    const { text, style = {} } = cfg;
+    const { textStyle = {}, r = 20 } = style;
+    group.addShape('text', {
+      attrs: {
+        text: text ? text : '',
+        x: r,
+        y: r * 2 + 8,
+        textAlign: 'center',
+        textBaseline: 'middle',
+        fill: '#666',
+        fontSize: 10,
+        ...textStyle
+      },
+    })
+  } 
 }

@@ -104,6 +104,12 @@ export default class BaseNode extends RegisterNode {
     // group.showAnchor(group);
   }
 
+  updateShape(group, {index = 0, ...props}) {
+    const currentShape = group.getChildByIndex(index);
+    currentShape.attr(props);
+  }
+
+  /** 计算文字宽度 */
   getTextWidth(text) {
     // re-use canvas object for better performance
     this.canvas = this.canvas || document.createElement("canvas")
