@@ -39,8 +39,8 @@ const Event = {
 
     const bbox = delegateShape.getBBox();
 
-    const x = bbox.x;
-    const y = bbox.y;
+    const x = bbox.x + 3;
+    const y = bbox.y + 3;
 
     delegateShape.remove();
 

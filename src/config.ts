@@ -5,6 +5,9 @@ export default {
       "id": "1617020503645",
       "x": 177.5,
       "y": 248.5,
+      taskStatus: '已警告',
+      taskStatusValue: 4,
+      "lineDashAnimate": true,
       "style": {
         "nodeType": "flow-node",
         "offsetX": 59,
@@ -20,16 +23,16 @@ export default {
           "leftText": "大数据",
           "icon1": "/icon/paihangbang.svg",
           "size": [
-            120,
+            180,
             50
           ]
         }
       },
-      "titleText": "获取数据",
+      "titleText": "获取数据氨基酸肯德基爱看就看了",
       "leftText": "大数据",
       "icon1": "/icon/paihangbang.svg",
       "size": [
-        120,
+        180,
         50
       ]
     },
@@ -220,7 +223,11 @@ export default {
       },
       "titleText": "攻击网站",
       "leftText": "gogo",
-      "icon1": "/icon/aite.svg"
+      "icon1": "/icon/aite.svg",
+      "size": [
+        180,
+        50
+      ]
     },
     {
       "type": "max-diamond-node",
@@ -291,7 +298,7 @@ export default {
       "target": "1617020510971",
       "sourceAnchor": 1,
       "targetAnchor": 3,
-      "type": "cvte-polyline",
+      "type": "max-test1",
       "id": "edge-0.08372193457668821617020514706",
       label: 'Y',
       text: '111',
@@ -562,7 +569,7 @@ export default {
       "target": "1617090150568",
       "sourceAnchor": 2,
       "targetAnchor": 0,
-      "type": "cvte-polyline",
+      "type": "max-test1",
       "id": "edge-0.15464497553149161617090154886",
       "style": {
         "active": {

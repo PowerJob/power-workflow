@@ -6,6 +6,8 @@ const Event = {
     this.graph.setItemState(e.item, 'selectNode', true);
     this.graph.set('selectedItem', e.item);
     this.graph.emit('onSelectNode', e.item);
+    const group = e.item.get('group');
+    this.graph.emit('onSelectNode', e.item, group);
     this.graph.set('noKeyDown', false);
   },
   onEdgeClick(e) {
@@ -13,6 +15,8 @@ const Event = {
     this.graph.setItemState(e.item, 'selectEdge', true);
     this.graph.set('selectedItem', e.item);
     this.graph.set('noKeyDown', false);
+    const group = e.item.get('group');
+    this.graph.emit('onSelectedEdge', e.item, group)
   },
   onCanvasClick(e) {
     this.graph.set('noKeyDown', false);

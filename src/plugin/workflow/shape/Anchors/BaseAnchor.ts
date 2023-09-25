@@ -38,6 +38,13 @@ export default class BaseAnchor extends RegisterManger {
                 this.update({style: {fill: '#1990FF', r: 5}}, item);
               }
             }
+            if(name === 'hoverAnchor') {
+              if(value) {
+                this.update({style: {fill: '#AEA1FF'}}, item);
+              } else {
+                this.update({style: {fill: '#FFF'}}, item);
+              }
+            }
             // if(name === 'active-anchor') {
             //   if(value) {
             //     this.update({style: {...editorStyle.anchorPointHoverStyle}}, item);

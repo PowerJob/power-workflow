@@ -8,7 +8,6 @@ import NodePanelGroup from './Components/NodePanelGroup';
 import AddNodePanel from '../plugin/AddNodePanel';
 import CommandPlugin from '../plugin/CommandPlugin';
 import ToolBarPlugin from '../plugin/ToolBarPlugin';
-import { ToolGroup, ToolItem } from './Components/Toolbar'
 
 /** 配置 */
 import { layoutSetting } from './config';
@@ -66,7 +65,19 @@ interface IProps {
   toolbar?: React.ReactElement;
   /** 命令列表 */
   commandList?: ICommond[];
-}
+  /** 额外要展示的元素，记得要搞成绝对定位，不要影响到主页面布局 */
+  ExtraElement?: React.ReactElement; // ExtraElement
+  /** 判断是否可链接边 */
+  judgeEdgeEnd?: (sourceNode, targetNode) => boolean;
+  /** 注册边, 这里请注意，必需用字面量对象的形式去注册 */
+  registerEdgeList?: any[];
+  /** 注册节点，要继承BaseNode */
+  registerNodeList?: any[];
+  /** 节点 */
+  registerNodes?: any[];
+  /** 注册行为列表 */
+  registerBehaviors?: any[]
+} 
 
 const baseSize = {
   listWidth: 200,
@@ -106,7 +117,8 @@ class Flow extends Component<IProps> {
     initEdges: [],
     listeners: {},
     animate: false,
-    commandList: []
+    commandList: [],
+    registerBehaviors: []
   }
 
   /** toobar实例 */
@@ -153,7 +165,7 @@ class Flow extends Component<IProps> {
   /** 初始化流程图 */
   initWorkflow = () => {
     const { size } = this.state;
-    const { initEdges, initNodes, layout, returnGraph, animate, commandList } = this.props;
+    const { initEdges, initNodes, layout, returnGraph, animate, commandList, judgeEdgeEnd, registerNodeList = [], registerEdgeList = [], registerNodes = [], registerBehaviors = [] } = this.props;
 
     const NodePanel = new AddNodePanel({ container: this.nodePanelContainer.current });
 
@@ -166,11 +178,15 @@ class Flow extends Component<IProps> {
       width: size.flowWidth,
       height: size.flowHeight,
       plugins: [Command, NodePanel, ToolBar],
-      layout: layoutSetting[layout],
+      // layout: layoutSetting[layout],
+      layout: layout,
       initNodes,
       initEdges,
-      registerNodes: [],
-      animate
+      registerNodes,
+      animate,
+      registerEdgeList,
+      registerBehaviors,
+      edgeCallback: judgeEdgeEnd
       // edgeCallback: this.edgeCallback
     });
     workflowInstance.graph.setMode('edit');
@@ -206,6 +222,7 @@ class Flow extends Component<IProps> {
   render() {
     return (
       <div className="xioo-flow" id="xioo-flow" ref={this.xiooFlow}>
+        {this.props.ExtraElement}
         <div className="xioo-flow-header" ref={this.toolBar}>
           <Header xiooFlow={this.xiooFlow}>
             {this.props.toolbar}

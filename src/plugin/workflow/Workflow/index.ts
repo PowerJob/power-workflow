@@ -24,7 +24,8 @@ import BaseAnchor from '../shape/Anchors/BaseAnchor';
 // import {HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode, AlignNode} from '../behavior';
 import Behaviors from '../behavior';
 
-
+import { layoutSetting } from './config';
+import { FlowUtil } from '../util/Util';
 
 interface ICvteWorkflow {
   /** 图实例 */
@@ -54,6 +55,10 @@ interface IProps {
   width?: number;
   /** 容器高度,默认全屏 */
   height?: number;
+  /** 自适应差值 宽度 传入的时候将启动自适应 */
+  diffWidth?: number;
+  /** 自适应差值 高度 传入的时候将启动自适应 */
+  diffHeight?: number;
   /** 插件列表 */
   plugins?: any[];
   /** 模式 */
@@ -63,15 +68,19 @@ interface IProps {
   /** 初始化的边数据 */
   initEdges?: any[];
   /** 节点注册 */
-  registerNodes: any[];
+  registerNodes?: any[];
   /** 布局方式 */
-  layout?: any;
+  layout?: 'horizontal' | "vertical";
   /** 连线时候的回调 */
   edgeCallback?: (sourceNode, targetNode) => boolean;
   /** 要注册节点的列表 */
   registerNodeList?: any[];
   /** 初始化时是是否执行动画 */
   animate?: boolean;
+  /** 注册边, 这里请注意，必需用字面量对象的形式去注册 */
+  registerEdgeList?: any[];
+  /** 注册行为 */
+  registerBehaviors?: any[];
 }
 
 
@@ -91,11 +100,16 @@ export default class CvteWorkflow implements ICvteWorkflow {
   registerNodes: any[];
   registerNodeList: any[];
   animate: boolean = false;
+  registerEdgeList: any[] = [];
+  registerBehaviors: any[] = [];
+  diffHeight = 0;
+  diffWidth = 0;
+  util = new FlowUtil();
   G6
   constructor({
     container,
-    width = document.body.clientWidth,
-    height = document.body.clientHeight,
+    width = window.innerWidth,
+    height = window.innerHeight,
     plugins = [],
     mode = "view",
     initEdges = [],
@@ -104,7 +118,11 @@ export default class CvteWorkflow implements ICvteWorkflow {
     edgeCallback,
     layout,
     registerNodeList,
-    animate = false
+    animate = false,
+    registerEdgeList = [],
+    registerBehaviors = [],
+    diffHeight = 0,
+    diffWidth = 0
   }: IProps) {
     this.container = container;
     const check = this.checkProps();
@@ -118,15 +136,29 @@ export default class CvteWorkflow implements ICvteWorkflow {
     this.G6 = G6;
     this.registerNodes = registerNodes;
     this.edgeCallback = edgeCallback;
-    this.layout = layout;
+    if(typeof layout === 'string') {
+      this.layout = layout ? layoutSetting[layout] : null;
+    } else {
+      this.layout = layout ? layout : null;
+    }
     this.registerNodeList = registerNodeList || [];
     this.animate = animate;
+    this.registerEdgeList = registerEdgeList;
+    this.registerBehaviors = registerBehaviors;
+
+    this.diffWidth = diffWidth;
+    this.diffHeight = diffHeight;
     new BaseAnchor(G6);
 
     this.initRegister();
 
 
     this.init();
+
+    // 如果存在差异值，那么随窗口自适应
+    if(this.diffHeight || this.diffWidth) {
+      window.addEventListener('resize', this.util.debounce(() => this.autoSize, 50));
+    }
   }
 
   init() {
@@ -135,17 +167,25 @@ export default class CvteWorkflow implements ICvteWorkflow {
       width: this.width,
       height: this.height,
       enabledStack: true,
-      // plugins: [gird, ...this.plugins],
       plugins: [...this.plugins],
       modes: this.initMode(),
       layout: this.layout,
-      animate: this.animate
+      animate: this.animate,
+      defaultNode: {
+        type: 'flow-node'
+      },
+      defaultEdge: {
+        type: 'cvte-polyline'
+      }
     });
-
+    // 设置mode
+    if(this.mode) {
+      this.graph.setMode(this.mode);
+    }
     this.graph.set('edgeEndCallback', this.edgeEndCallback)
 
     document.addEventListener('click', (e) => {
-      if(e.target['nodeName'] === 'CANVAS') {
+      if (e.target['nodeName'] === 'CANVAS') {
         return;
       }
       this.graph.set('noKeyDown', true);
@@ -155,11 +195,11 @@ export default class CvteWorkflow implements ICvteWorkflow {
     this.initData();
   }
 
-  changeMode() {}
-  getWorkflowData() {}
-  onSelectedItem() {}
-  addNode() {}
-  addEdge() {}
+  changeMode() { }
+  getWorkflowData() { }
+  onSelectedItem() { }
+  addNode() { }
+  addEdge() { }
 
   /** 校验container */
   private checkProps() {
@@ -173,9 +213,9 @@ export default class CvteWorkflow implements ICvteWorkflow {
   /** 初始化模式 */
   private initMode() {
     return {
-      default: ['drag-canvas', {type: "zoom-canvas", sensitivity: 1}],
+      default: ['drag-canvas', { type: "zoom-canvas", sensitivity: 1 }],
       edit: ['drag-canvas', 'cover-hover-node', 'cover-hover-anchor', 'cover-drag-node', 'cover-drag-anchor', 'cover-select-node', 'cover-hover-edge', 'cover-delete-item', 'cover-add-node', 'cover-align-node'],
-      view: ['drag-canvas', 'cover-select-node', 'cover-drag-node', 'cover-align-node']
+      view: ['drag-canvas', 'cover-select-node']
     }
   }
 
@@ -187,6 +227,12 @@ export default class CvteWorkflow implements ICvteWorkflow {
     }
     this.graph.data(data);
     this.graph.render();
+    if(this.layout && this.animate) {
+      console.log('我是la')
+      setTimeout(() => {
+        this.graph.layout();
+      }, 200);
+    }
   }
 
   /** 初始化注册 */
@@ -195,16 +241,18 @@ export default class CvteWorkflow implements ICvteWorkflow {
     [...allNode, BaseNode, FlowNode, ...this.registerNodes].forEach(SelfNode => {
       new SelfNode(this.G6);
     });
-    
+
     // 行为注册[HoverNode, HoverAnchor, DragNode, DragAnchor, SelectNode, HoverEdge, DeleteItem, addNode, AlignNode]
-    Behaviors.forEach(SelfNode => {
-      new SelfNode(this.G6);
+    [...Behaviors, ...this.registerBehaviors].forEach(Behavior => {
+      new Behavior(this.G6);
     });
 
     // 边注册
-    // [CvtePolyline].forEach(SelfNode => {
-    //   new SelfNode(this.G6);
-    // });
+    [CvtePolyline].forEach(SelfNode => {
+      new SelfNode(this.G6);
+    });
+
+    this.registerSideEdge();
 
     CvtePolyline1(G6);
     CoverCircle(G6);
@@ -213,16 +261,56 @@ export default class CvteWorkflow implements ICvteWorkflow {
     // this.registerNodeByFront();
   }
 
-  /** 自定义注册测节点 */ 
+  /** 自适应视口的大小 */
+  private autoSize() {
+    const width = window.innerWidth - this.diffWidth;
+    const height = window.innerHeight - this.diffHeight;
+    this.changeSize(width, height);
+  }
+
+  /** 动态设置数据 */
+  setData(data) {
+    this.graph.data(data);
+    this.graph.render();
+  }
+
+  /** 设置模式 */
+  setMode(mode: string) {
+    this.graph.setMode(mode);
+  }
+
+  /** 改变视口的大小 */
+  changeSize(width: number, height: number) {
+    this.graph.changeSize(width, height);
+  }
+
+  /** 监听事件 */
+  on(eventName: string, handler) {
+    this.graph.on(eventName, handler);
+  }
+
+  /** 注册外界的边 */
+  registerSideEdge() {
+    this.registerEdgeList.forEach(item => {
+      const { name, extended, register } = item;
+      if (extended) {
+        this.G6.registerEdge(name, register, extended);
+      } else {
+        this.G6.registerEdge(name, register);
+      }
+    })
+  }
+
+  /** 自定义注册测节点 */
   registerNodeByFront = () => {
     this.registerNodeList.forEach((item) => {
-      const {nodeDesc} = item;
-      
+      const { nodeDesc } = item;
+
       this.G6.registerNode(item.nodeName, {
         drawKeyShape(cfg, group) {
           let keyShape = null;
           nodeDesc.forEach((node, index) => {
-            if(index === 0) {
+            if (index === 0) {
               keyShape = this.reloadDrawKeyShape(cfg, group, node);
             } else {
               this.reloadDrawKeyShape(cfg, group, node);
@@ -230,12 +318,12 @@ export default class CvteWorkflow implements ICvteWorkflow {
           });
           return keyShape;
         },
-        reloadDrawKeyShape(cfg, group, node){
+        reloadDrawKeyShape(cfg, group, node) {
           let { type, name, ...attrs } = node;
           let other = {};
 
           // 如果是主视图，则宽度按照外界的计算
-          if(attrs.mainShape) {
+          if (attrs.mainShape) {
             other = {
               width: this.size.width,
               height: this.size.height
@@ -266,7 +354,7 @@ export default class CvteWorkflow implements ICvteWorkflow {
   }
 
   edgeEndCallback = (sourceNode, targetNode) => {
-    if(!this.edgeCallback) return true;
+    if (!this.edgeCallback) return {};
     return this.edgeCallback(sourceNode, targetNode);
   }
 }

@@ -10,7 +10,7 @@ const uniqBy = (arr,key)=>{
 };
 
 export default class CvtePolyline extends RegisterEdge {
-  name = 'cvte-polyline';
+  name = 'cvte-polyline1';
   extendedName = 'polyline';
 
   group

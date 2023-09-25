@@ -15,9 +15,12 @@ export default {
 			stroke: '#61B3FF',
 			opacity: 0.6,
 			lineWidth: 2,
-			radius: 8,
+			radius: 2,
 			cursor: 'move'
-    }
+    },
+	childPath: {
+		stroke: '#61B3FF'
+	}
   },
   leftText: {
 		origin: {
@@ -71,6 +74,10 @@ export default {
 		},
 		stop: {
 			fill: '#72007B'
+		},
+		// 取消
+		cancel: {
+			fill: '#A5A5A5'
 		}
 	},
 	// 左下角的文字

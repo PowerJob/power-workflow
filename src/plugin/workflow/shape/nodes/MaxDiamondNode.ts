@@ -32,8 +32,10 @@ export default class MaxDiamondNode extends BaseNode {
         ['L', sideLength, dot],
         ['Z']
       ],
-      fill: '#0577BB',
-      stroke: '#028080',
+      fill: '#C7E4FF',
+      stroke: '#61B3FF',
+      opacity: 0.6,
+      lineWidth: 2,
       ...style
     }
     const keyShape = group.addShape('path', {
@@ -110,12 +112,14 @@ export default class MaxDiamondNode extends BaseNode {
       group.addShape('text', {
         attrs: {
           x: sideLength / 2, // 居中
-          y: sideLength + 8,
+          y: sideLength / 2, // + 8
           textAlign: 'center',
           textBaseline: 'middle',
           text: cfg.text,
-          fill: '#666',
-          fontSize: 10,
+          // fill: '#666',
+          fontSize: 14,
+          stroke: '#2E4553',
+          // fontWeight: 400,
           ...textStyle
         },
         draggable: true,

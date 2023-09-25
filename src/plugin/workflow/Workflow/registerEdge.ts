@@ -18,21 +18,21 @@ export class RegisterEdge extends RegisterManger {
   register() {
     const self = this;
     this.G6.registerEdge(this.name, {
-      draw: function(cfg, group) {
+      drawShape: function(cfg, group) {
         return self.draw.call(self, cfg, group, this);
       },
-      // afterDraw: function(cfg, group) {
-      //   return self.afterDraw.call(self, cfg, group, this);
-      // },
-      // update: function(cfg, group) {
-      //   self.update.call(self, cfg, group, this);
-      // },
-      // afterUpdate: function(cfg, group) {
-      //   self.afterUpdate.call(self, cfg, group, this);
-      // },
-      // setState: function(name, value, item){
-      //   self.setState.call(self, name, value, item, this)
-      // }
+      afterDraw: function(cfg, group) {
+        return self.afterDraw.call(self, cfg, group, this);
+      },
+      update: function(cfg, group) {
+        self.update.call(self, cfg, group, this);
+      },
+      afterUpdate: function(cfg, group) {
+        self.afterUpdate.call(self, cfg, group, this);
+      },
+      setState: function(name, value, item){
+        self.setState.call(self, name, value, item, this)
+      }
     }, 'polyline');
   };
 

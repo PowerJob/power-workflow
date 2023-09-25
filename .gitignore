@@ -5,3 +5,12 @@ dist/icon
 # tsconfig.json
 .idea
 .VSCodeCounter
+
+
+# node_modules
+# dist
+# dist/icon
+# src
+# tsconfig.json
+# .idea
+# .VSCodeCounter

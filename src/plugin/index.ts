@@ -7,9 +7,10 @@
  */
 import Workflow from './workflow/Workflow';
 
-import Flow from './workflow/Flow';
-import BaseNode from './workflow/shape/nodes/BaseNode';
-export { ToolGroup, ToolItem } from './workflow/Flow/Components/Toolbar'
+// import Flow from './workflow/Flow';
+// import BaseNode from './workflow/shape/nodes/BaseNode';
+// import RegisterBehavior from './workflow/Workflow/registerBehavior';
+// export { ToolGroup, ToolItem } from './workflow/Flow/Components/Toolbar'
 
 
 // export { RegisterNode }  from './workflow/Workflow/registerNode';
@@ -18,6 +19,4 @@ export { ToolGroup, ToolItem } from './workflow/Flow/Components/Toolbar'
 
 // export const Flow = Flows;
 
-export { BaseNode, Workflow }
-
-export default Flow;
+export default Workflow;

@@ -6,7 +6,11 @@ const Event = {
   },
   onNodeMouseLeave(e) {
     const node = e.item.getContainer().getParent();
+    this.graph.setItemState(e.item, 'hoverAnchor', false);
     node && this.graph.setItemState(node.get('item'), 'hoverNode', false);
+  },
+  onAnchorMouseEnter(e) {
+    this.graph.setItemState(e.item, 'hoverAnchor', true);
   }
 }
 
@@ -19,7 +23,8 @@ export default class HoverAnchor extends RegisterBehavior {
   getEvents() {
     return {
     //   'anchor:mouseenter': 'onNodeMouseEnter',
-      'anchor:mouseleave': 'onNodeMouseLeave'
+      'anchor:mouseleave': 'onNodeMouseLeave',
+      'anchor:mouseenter': 'onAnchorMouseEnter'
     }
   }
 }

@@ -17,6 +17,8 @@ import { ToolGroup, ToolItem } from './plugin/workflow/Flow/Components/Toolbar'
 
 import config from './config';
 
+import maxtest1 from './test/edges/test1';
+
 import 'font-awesome/css/font-awesome.css';
 
 
@@ -44,6 +46,8 @@ import 'font-awesome/css/font-awesome.css';
 //     return keyShape;
 //   }
 // }
+
+const registerEdges = [maxtest1]
 
 class MyCommand {
   execute({ graph }) {
@@ -391,7 +395,8 @@ export default class App extends Component {
         // y: 200,
         leftText: '1234567',
         titleText: 'ajskdskkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
-        taskStatus: 'NAME',
+        // taskStatus: 'NAME',
+        taskStatus: 'name',
         taskStatusValue: 3,
         rightText: 'asjdka'
       },
@@ -403,7 +408,7 @@ export default class App extends Component {
         // y: 200,
         leftText: '1234567',
         titleText: '获取数据',
-        taskStatus: '进行中我真的好',
+        taskStatus: 'name22sds33',
         rightText: 'asjdka'
       },
       {
@@ -686,7 +691,7 @@ export default class App extends Component {
       // this.doubleNode = item;
       const group = item.get('group');
       // group.updateLeftText({ text: '111111' }).updateTitleText({ text: '2222' });
-      group.updateText({text: '1111'})
+      group.updateText && group.updateText({text: group.textWidthToEllipsis({text: '我将会是最长的文本，这样写出来不知道会是什么燕子'})});
 
 
       // workflow.graph.updateItem(item, {
@@ -717,14 +722,16 @@ export default class App extends Component {
         {/* <div className="wlf-g6" ref={this.refWlf}></div> */}
         <Flow
           groupNodeList={this.state.groupNodeList}
-          // initNodes={this.state.initNodes}
-          initNodes={config.nodes}
-          // initEdges={this.state.initEdges}
-          initEdges={config.edges}
+          initNodes={this.state.initNodes}
+          // initNodes={config.nodes}
+          initEdges={this.state.initEdges}
+          // initEdges={config.edges}
           animate
           commandList={commandList}
-          // layout="horizontal"
+          layout="horizontal"
           returnGraph={this.getGraph}
+          registerEdgeList={registerEdges}
+          // judgeEdgeEnd={(sourceNode, targetNode) => { console.log(sourceNode);  return false;}}
           toolbar={
             (
               <React.Fragment>

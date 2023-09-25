@@ -1,9 +1,7 @@
 export default class DeleteCommand {
   execute({ graph }) {
     const item = graph.get('selectedItem');
-    if(!item) {
-      return;
-    }
+    if(!item) return;
     // 移除节点
     graph.remove(item);
     // 选中节点置null

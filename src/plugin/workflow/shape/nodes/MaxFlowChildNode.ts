@@ -1,8 +1,8 @@
 import BaseNode from './BaseNode';
 import nodeStyle from '../../defaultStyle/nodeStyle';
 
-export default class FlowNode extends BaseNode {
-  name = 'flow-node'
+export default class FlowChildNode extends BaseNode {
+  name = 'flow-child-node'
   constructor(Grid) {
     super(Grid, true);
     this.register();
@@ -18,13 +18,15 @@ export default class FlowNode extends BaseNode {
 
     this.drawTitleText(cfg, group);
 
-    this.drawIcon(cfg.icon1, group, 6);
+    this.drawIcon(cfg.icon1, group, 16);
 
-    this.drawIcon(cfg.icon2, group, 24);
+    this.drawIcon(cfg.icon2, group, 34);
 
     this.drawRightText(cfg, group);
 
     this.drawStatusShape(cfg, group);
+
+    this.drawChildPath(cfg, group);
 
     this.addShapeApi(cfg, group);
 
@@ -94,6 +96,41 @@ export default class FlowNode extends BaseNode {
     group.textWidthToEllipsis = textWidthToEllipsis;
   }
 
+  /** 绘制边线 */
+  drawChildPath(cfg, group) {
+    console.log(cfg);
+    console.log(group);
+    const { style: { stroke } } = cfg;
+    const { width, height } = this.size;
+    const { x, y } = cfg;
+    const dis = 10;
+    const strokeStyel = stroke ? stroke : nodeStyle.base.childPath.stroke;
+    group.addShape('path', {
+      attrs: {
+        path: [
+          ['M', dis, 0],
+          ['L', dis, height]
+        ],
+        stroke: strokeStyel,
+        lineWidth: 2,
+        opacity: 0.6
+      },
+      name: 'chlid-flow-path1'
+    })
+    group.addShape('path', {
+      attrs: {
+        path: [
+          ['M', width - dis, 0],
+          ['L', width - dis, height]
+        ],
+        stroke: strokeStyel,
+        lineWidth: 2,
+        opacity: 0.6
+      },
+      name: 'chlid-flow-path2'
+    })
+  }
+
 
   /** 绘制左上角的文字 */
   drawLeftText(cfg, group) {
@@ -121,7 +158,7 @@ export default class FlowNode extends BaseNode {
     const attrs = {
       ...nodeStyle.rightText.origin,
       text: rightText ? rightText : '',
-      x: width - 12,
+      x: width - 18,
       y: height - 12,
       ...rightTextStyle
     };
@@ -169,15 +206,14 @@ export default class FlowNode extends BaseNode {
   getStatusStyle(cfg) {
     let { taskStatusValue } = cfg;
 
-    const statusArr = [3, 4, 5, 10, 9]
+    const statusArr = [3, 4, 5, 10]
 
     const style = {
       3: nodeStyle.statusShape.underway,
       1: nodeStyle.statusShape.waiting,
       5: nodeStyle.statusShape.success,
       4: nodeStyle.statusShape.faild,
-      10: nodeStyle.statusShape.stop,
-      9: nodeStyle.statusShape.cancel
+      10: nodeStyle.statusShape.stop
     }
 
     if (!taskStatusValue || statusArr.indexOf(taskStatusValue) < 0) taskStatusValue = 1;
@@ -206,7 +242,7 @@ export default class FlowNode extends BaseNode {
       ...selfStyle,
       r: nodeStyle.statusShape.r,
       // x: width - this.getTextWidth1('14px', taskStatus) - 10,
-      x: width - this.getTextWidth2(12, taskStatus) - 10,
+      x: width - this.getTextWidth2(12, taskStatus) - 20,
       y: 12
     };
     group.addShape('circle', {
@@ -237,7 +273,7 @@ export default class FlowNode extends BaseNode {
       ...nodeStyle.statusShape.text,
       text: taskStatus,
       // x: width - this.getTextWidth1('14px', taskStatus) / 2 - 4,
-      x: width - this.getTextWidth2(12, taskStatus) / 2 - 4,
+      x: width - this.getTextWidth2(12, taskStatus) / 2 - 14,
       y: 12,
       ...taskStatusStyle
     };

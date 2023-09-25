@@ -90,7 +90,11 @@ const Event = {
         target: this.originInfo.targetNode.get('id'),
         sourceAnchor: this.originInfo.sourceAnchor,
         targetAnchor: this.originInfo.targetAnchor,
-        type: 'cvte-polyline'
+        type: 'cvte-polyline',
+        ...isAddEdge
+        // attr: {
+        //   label: 'ok'
+        // }
       });
     }
     this.graph.setItemState(this.originInfo.sourceNode, 'hoverNode', false);

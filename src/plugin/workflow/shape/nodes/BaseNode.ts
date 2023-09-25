@@ -83,6 +83,19 @@ const stateList = {
   }
 }
 
+/** 计算字符的长度 */
+const calcStrLen = function calcStrLen(str) {
+  var len = 0;
+  for (var i = 0; i < str.length; i++) {
+    if (str.charCodeAt(i) > 0 && str.charCodeAt(i) < 128) {
+      len++;
+    } else {
+      len += 2;
+    }
+  }
+  return len;
+};
+
 export default class BaseNode extends RegisterNode {
   name = 'base-node';
   size: ISize = {width: 180, height: 70}
@@ -93,6 +106,7 @@ export default class BaseNode extends RegisterNode {
   }
   draw(cfg, group, inc) {
     this.size = this.computeNodeSize(cfg);
+    // console.log(this.size);
 
     const keyShape = this.drawKeyShape(cfg, group);
     // this.drawAnchor(group);
@@ -138,6 +152,56 @@ export default class BaseNode extends RegisterNode {
     
 
     return result - text.length * 1.5;
+  }
+
+  /** 计算文字的宽度 */
+  getTextWidth2(fontSize, text) {
+    const fontWidth = fontSize; //字号+边距
+    var width = this.calcStrLen(text) * fontWidth;
+    return width / 2;
+  }
+
+  /** 计算字符数 */
+  calcStrLen(str) {
+    var len = 0;
+    for (var i = 0; i < str.length; i++) {
+      if (str.charCodeAt(i) > 0 && str.charCodeAt(i) < 128) {
+        len = ++len + 0.2;
+      } else {
+        len += 2;
+      }
+    }
+    return len;
+  };
+
+  /** 判断宽度可以容纳多少字符 */
+  withByContain(width, fontSize) {
+    const fontWidth = fontSize;
+    return width * 2 / fontWidth;
+  }
+
+  /** 根据宽度自动计算文字的显示 */
+
+
+  /** 文字超出指定宽度显示省略号 */
+  textWidthToEllipsis({ text, threshold = 4, width = this.size.width, fontSize = 12 }) {
+    // 加两个字符的空白
+    const containCharacter = this.withByContain(width, fontSize) - threshold;
+    let finalText = '';
+    let len = 0;
+    for (var i = 0; i < text.length; i++) {
+      if (text.charCodeAt(i) > 0 && text.charCodeAt(i) < 128) {
+        len++;
+      } else {
+        len += 2;
+      }
+      if(len > containCharacter) {
+        finalText += '...'
+        break;
+      };
+      finalText += text[i];
+    }
+    return finalText;
   }
 
   /** 绘制主图形 */
