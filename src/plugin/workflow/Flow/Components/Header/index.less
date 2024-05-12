@@ -1,0 +1,76 @@
+.xioo-work-header {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  .xioo-work-header-group {
+    display: flex;
+    padding: 0px 8px;
+    .xioo-work-header-group-icon {
+      width: 30px;
+      height: 30px;
+      border: 1px solid transparent;
+      transition: 0.3s;
+      border-radius: 2px;
+      margin: 0 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      &.actionable {
+        .operate {
+          color: #404040;
+        }
+      }
+      .icon-text {
+        display: none;
+        position: absolute;
+        font-size: 12px;
+        height: 20px;
+        width: 60px;
+        background: #1990FF;
+        border-radius: 4px;
+        // display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 35px;
+        color: #fff;
+        border: 1px solid #0184FF;
+        box-shadow: 0 2px 4px 1px #c0c0c0;
+        opacity: 0;
+        &::before {
+          content: '';
+          border: 10px solid transparent;
+          border-bottom-color: #1990FF;
+          position: absolute;
+          height: 10px;
+          width: 10px;
+          top: -20px;
+          left: 0px;
+          right: 0px;
+          margin: auto;
+        }
+      }
+      &:hover {
+        border: 1px solid #f0f0f0;
+      }
+      &:hover .operate {
+        color: #1990FF;
+      }
+      &:hover .icon-text {
+        display: flex;
+        transition: 0.3s;
+        opacity: 1;
+      }
+      .operate {
+        font-size: 18px;
+        color: #A2A2A2;
+        transition: 0.3s;
+      }
+    }
+    
+    & + .xioo-work-header-group {
+      border-left: 1px solid #f0f0f0;
+    }
+  }
+}

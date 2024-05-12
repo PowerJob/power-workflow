@@ -1,0 +1,39 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+.xioo-flow {
+  // width: calc(100vw);
+  // height: calc(100vh);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  background-color: #fff;
+  .xioo-flow-header {
+    height: 48px;
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0px 24px;
+  }
+  .xioo-flow-body {
+    display: flex;
+    .xioo-flow-body-node {
+      // background-color: gray;
+      // padding: 8px;
+      border-right: 1px solid #e0e0e0;
+      overflow: scroll;
+      height: 100%;
+      .xioo-panel-item {
+        width: 100%;
+        height: 50px;
+        background-color: chocolate;
+      }
+    }
+    .xioo-flow-body-flow {
+      // background-color: aqua;
+    }
+  }
+}
