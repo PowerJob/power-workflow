@@ -120,7 +120,7 @@ const Event = {
   pointLineDistance: function (lineX1, lineY1, lineX2, lineY2, pointX, pointY) {
     const lineLength = [lineX2 - lineX1, lineY2 - lineY1];
     if (vec2.exactEquals(lineLength as any, [0, 0])) return NaN;
-    let s = [-lineLength[1], lineLength[0]];
+    const s = [-lineLength[1], lineLength[0]];
     vec2.normalize(s as any, s as any);
     return Math.abs(vec2.dot([pointX - lineX1, pointY - lineY1], s as any));
   },

@@ -37,11 +37,11 @@ const stateList = {
 
       const distanceX = Math.abs(endPos.x - startPos.x);
       const distanceY = Math.abs(endPos.Y - startPos.Y);
-      let disX = 20 / 1000 * distanceX;
-      let disY = 20 / 1000 * distanceY;
+      const disX = 20 / 1000 * distanceX;
+      const disY = 20 / 1000 * distanceY;
       let startX = nodeModel.startPos.x;
       let startY = nodeModel.startPos.x;
-      let inc = setInterval(() => {
+      const inc= setInterval(() => {
         if(startX < endPos.x) {
           clearInterval(inc);
         }
@@ -85,8 +85,8 @@ export default function SimpleNode(Grid) {
     },
     /** 绘制主图形 */
     drawKeyShape(cfg, group) {
-      let width = this.size.width;
-      let height = this.size.height;
+      const width = this.size.width;
+      const height = this.size.height;
       const { style = {} } = cfg;
       const attrs = {
         ...nodeStyle.base.origin,
@@ -141,9 +141,9 @@ export default function SimpleNode(Grid) {
     },
     /** 计算节点的宽高 */
     computeNodeSize(cfg) {
-      let size = cfg.size && Array.isArray(cfg.size) ? cfg.size : [180, 70];
-      let width: number = size[0] ? size[0] : 180;
-      let height: number = size[1] ? size[1] : 70;
+      const size = cfg.size && Array.isArray(cfg.size) ? cfg.size : [180, 70];
+      const width: number = size[0] ? size[0] : 180;
+      const height: number = size[1] ? size[1] : 70;
       return {width, height}
     },
     getAnchorPoints() {

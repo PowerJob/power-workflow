@@ -10,8 +10,8 @@ export default class MaxCircleNode extends BaseNode {
 
   /** 绘制图形 */
   drawKeyShape(cfg, group) {
-    let width = this.size.width;
-    let height = this.size.height;
+    const width = this.size.width;
+    const height = this.size.height;
     const { style = {} } = cfg;
     const { sideLength = 100, position = 'top' } = style;
     const side8 = sideLength * 0.8;
