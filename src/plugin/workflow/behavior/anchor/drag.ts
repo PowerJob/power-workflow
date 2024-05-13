@@ -27,6 +27,7 @@ const Event = {
   },
   _updateEdgeDelegate(item, x, y) {
     let edgeShape = item.get('edgeDelegate');
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     if(!edgeShape) {
       const parent = self.graph.get('group');
@@ -82,7 +83,7 @@ const Event = {
     }
 
     const edgeEndCallback = this.graph.get('edgeEndCallback')
-    let isAddEdge = edgeEndCallback(this.originInfo.sourceNode, this.originInfo.targetNode);
+    const isAddEdge = edgeEndCallback(this.originInfo.sourceNode, this.originInfo.targetNode);
     if(!isAddEdge) return;
     if(this.originInfo.targetNode) {
       this.graph.add('edge', {

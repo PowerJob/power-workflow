@@ -11,7 +11,7 @@ interface IProps {
   /** 命令，这里的命令要通过注册命令去注册 */
   command?: string;
   /** 执行命令时传递的参数，请保持是json格式 */
-  params?: Object;
+  params?: Record<string, unknown>;
   /** 状态 */
   status?: boolean;
   /** 点击事件 */

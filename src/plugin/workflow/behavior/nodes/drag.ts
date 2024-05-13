@@ -72,7 +72,7 @@ const Event = {
         lineWidth: 1,
       }
 
-      let other: any = {};
+      const other: any = {};
 
       if(keyShapeAttr.r) {
         other.radius = bbox.width / 2
