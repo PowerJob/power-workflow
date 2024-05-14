@@ -1,5 +1,5 @@
 if(process.env.NODE_ENV === 'production') {
-  module.exports = require('./dist/help.min.js');
+  module.exports = require('./dist/power-workflow.min.js');
 } else {
-  module.exports = require('./dist/help.js');
+  module.exports = require('./dist/power-workflow.js');
 }
