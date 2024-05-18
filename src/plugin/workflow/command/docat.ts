@@ -19,10 +19,12 @@ export default class CopyCommand {
   }
 
   addStyle(dom, isStyle) {
-    if(isStyle) {
-      dom.classList.remove('actionable');
-    } else {
-      dom.classList.add('actionable');
+    if(dom){
+      if(isStyle) {
+        dom.classList.remove('actionable');
+      } else {
+        dom.classList.add('actionable');
+      }
     }
   }
 }

@@ -734,7 +734,7 @@ export default class App extends Component {
           initEdges={this.state.initEdges}
           // initEdges={config.edges}
           animate
-          commandList={commandList}
+          unusedCommands={["undo","redo"]}
           layout="horizontal"
           returnGraph={this.getGraph}
           registerEdgeList={registerEdges}
