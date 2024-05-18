@@ -71,7 +71,7 @@ const Event = {
     this.graph.set('edgeDragging', true);
     this.target = e.item;
   },
-  onDragEnd(e) {
+  async onDragEnd(e) {
     // this.showAllAnchor('clearAnchor');
     this.clearAllAnchor();
     
@@ -83,7 +83,7 @@ const Event = {
     }
 
     const edgeEndCallback = this.graph.get('edgeEndCallback')
-    const isAddEdge = edgeEndCallback(this.originInfo.sourceNode, this.originInfo.targetNode);
+    const isAddEdge = await edgeEndCallback(this.originInfo.sourceNode, this.originInfo.targetNode);
     if(!isAddEdge) return;
     if(this.originInfo.targetNode) {
       this.graph.add('edge', {
