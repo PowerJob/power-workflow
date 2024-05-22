@@ -12,8 +12,8 @@ const ToolGroup: React.FC<IProps> = memo(({ children, onChange }) => {
   return (
     <div className="xioo-work-header-group">
       {
-        React.Children.map(children, (child, index) => {
-          let childProps = (child as any).props;
+        React.Children.map(children, (child) => {
+          const childProps = (child as any).props;
           return React.cloneElement(child as any, {
             ...childProps,
             onChange

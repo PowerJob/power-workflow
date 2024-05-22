@@ -22,9 +22,9 @@ const Event = {
     this.clearAllSelected();
   },
   clearAllSelected() {
-    let selectedNode = this.graph.findAllByState('node', 'selectNode');
+    const selectedNode = this.graph.findAllByState('node', 'selectNode');
     this.graph.set('selectedItem', null);
-    let selectedEdge = this.graph.findAllByState('edge', 'selectEdge');
+    const selectedEdge = this.graph.findAllByState('edge', 'selectEdge');
     selectedNode.forEach(node => {
       this.graph.setItemState(node, 'selectNode', false);
     });

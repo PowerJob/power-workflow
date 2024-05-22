@@ -1,10 +1,66 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import './index.less';
+import "./index.less";
 
 interface IProps {
   xiooFlow: any;
+  unusedCommands?: any[];
 }
+
+function filterHeaderGroups(headerGroups, commandsToRemove) {
+  return headerGroups.map(group => ({
+    icons: group.icons.filter(icon => !commandsToRemove.includes(icon.command)),
+  })).filter(group => group.icons.length > 0);
+}
+
+const headerGroups = [
+  {
+    icons: [
+      { command: "undo", iconClass: "fa fa-mail-reply", text: "撤销" },
+      { command: "redo", iconClass: "fa fa-mail-forward", text: "恢复" },
+    ],
+  },
+  {
+    icons: [
+      { command: "copy", iconClass: "fa fa-clone", text: "复制" },
+      { command: "delete", iconClass: "fa fa-trash-o", text: "删除" },
+    ],
+  },
+  {
+    icons: [
+      {
+        command: "blow",
+        iconClass: "fa fa-search-plus",
+        text: "放大",
+        params: { value: 0.1 },
+      },
+      {
+        command: "blow",
+        iconClass: "fa fa-search-minus",
+        text: "缩小",
+        params: { value: -0.1 },
+      },
+      { command: "fitView", iconClass: "fa fa-laptop", text: "适应画布" },
+      {
+        command: "originSize",
+        iconClass: "fa fa-calendar-check-o",
+        text: "实际大小",
+      },
+      { command: "layout", iconClass: "fa fa-cube", text: "重新布局" },
+    ],
+  },
+  {
+    icons: [
+      {
+        command: "fullScreen",
+        iconClass: "fa fa-window-maximize",
+        text: "全屏",
+        params: { domId: "xioo-flow" },
+      },
+    ],
+  },
+];
+
 
 class index extends Component<IProps> {
   handleFullScreen = () => {
@@ -20,64 +76,34 @@ class index extends Component<IProps> {
       // graph.paint();
       return;
     }
-  }
+  };
   render() {
+    const { unusedCommands = [] } = this.props;
     return (
       <div className="xioo-work-header">
-        <div className="xioo-work-header-group">
-          <div className="xioo-work-header-group-icon" data-command="undo">
-            <span className="operate fa fa-mail-reply"></span>
-            <span className="icon-text">撤销</span>
+        { filterHeaderGroups(headerGroups, unusedCommands).map((group, groupIndex) => (
+          <div key={groupIndex} className="xioo-work-header-group">
+            {group.icons.map((icon, iconIndex) => (
+              <div
+                key={iconIndex}
+                className={`xioo-work-header-group-icon${
+                  icon.params ? " actionable" : ""
+                }`}
+                data-command={icon.command}
+                data-params={
+                  icon.params ? `${JSON.stringify(icon.params)}` : undefined
+                }
+              >
+                <span className={`operate ${icon.iconClass}`}></span>
+                <span className="icon-text">{icon.text}</span>
+              </div>
+            ))}
           </div>
-          <div className="xioo-work-header-group-icon" data-command="redo">
-            <span className="operate fa fa-mail-forward"></span>
-            <span className="icon-text">恢复</span>
-          </div>
-        </div>
-        <div className="xioo-work-header-group">
-          <div className="xioo-work-header-group-icon" data-command="copy">
-            <span className="operate fa fa-clone"></span>
-            <span className="icon-text">复制</span>
-          </div>
-          <div className="xioo-work-header-group-icon" data-command="delete">
-            <span className="operate fa fa-trash-o"></span>
-            <span className="icon-text">删除</span>
-          </div>
-        </div>
-        <div className="xioo-work-header-group">
-          <div className="xioo-work-header-group-icon actionable" data-command="blow" data-params={`${JSON.stringify({value: 0.1})}`}>
-            <span className="operate fa fa-search-plus"></span>
-            <span className="icon-text">放大</span>
-          </div>
-          <div className="xioo-work-header-group-icon actionable" data-command="blow" data-params={`${JSON.stringify({value: -0.1})}`}>
-            <span className="operate fa fa-search-minus"></span>
-            <span className="icon-text">缩小</span>
-          </div>
-          <div className="xioo-work-header-group-icon actionable" data-command="fitView">
-            <span className="operate fa fa-laptop"></span>
-            <span className="icon-text">适应画布</span>
-          </div>
-          <div className="xioo-work-header-group-icon actionable" data-command="originSize">
-            <span className="operate fa fa-calendar-check-o"></span>
-            <span className="icon-text">实际大小</span>
-          </div>
-          <div className="xioo-work-header-group-icon actionable" data-command="layout">
-            <span className="operate fa fa-cube"></span>
-            <span className="icon-text">重新布局</span>
-          </div>
-        </div>
-        <div className="xioo-work-header-group">
-          <div className="xioo-work-header-group-icon actionable" data-command="fullScreen" data-params={`${JSON.stringify({domId: 'xioo-flow'})}`}> 
-            <span className="operate fa fa-window-maximize"></span>
-            <span className="icon-text">全屏</span>
-          </div>
-        </div>
-        {
-          React.Children.map(this.props.children, (child, index) => {
-            const childProps = (child as any).props;
-            return React.cloneElement(child as any, childProps);
-          })
-        }
+        ))}
+        {React.Children.map(this.props.children, (child, index) => {
+          const childProps = (child as any).props;
+          return React.cloneElement(child as any, childProps);
+        })}
       </div>
     );
   }

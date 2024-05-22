@@ -9,3 +9,5 @@ class HtmlNode {
     // Object.keys()
   }
 }
+
+export default HtmlNode

@@ -97,7 +97,7 @@ export default class FlowNode extends BaseNode {
 
   /** 绘制左上角的文字 */
   drawLeftText(cfg, group) {
-    let { leftText, leftTextStyle = {} } = cfg;
+    const { leftText, leftTextStyle = {} } = cfg;
 
     if (!leftText) return;
 
@@ -135,6 +135,7 @@ export default class FlowNode extends BaseNode {
   /** 绘制主题文字 */
   drawTitleText(cfg, group) {
 
+    // eslint-disable-next-line prefer-const
     let { titleText, titleTextStyle = {} } = cfg;
 
     if (!titleText) return;
@@ -190,11 +191,11 @@ export default class FlowNode extends BaseNode {
   drawStatusShape(cfg, group) {
     const width = this.size.width;
     // const height = this.size.height;
-    let { taskStatus } = cfg;
+    const { taskStatus } = cfg;
 
     if (!taskStatus) return;
 
-    let selfStyle = this.getStatusStyle(cfg);
+    const selfStyle = this.getStatusStyle(cfg);
 
     // if(!taskStatus || !style[taskStatus]) return;
 
@@ -229,7 +230,7 @@ export default class FlowNode extends BaseNode {
     //   '已完成': nodeStyle.statusShape.success
     // }
 
-    let selfStyle = this.getStatusStyle(cfg);
+    const selfStyle = this.getStatusStyle(cfg);
 
     const attrs = {
       ...selfStyle,
@@ -292,7 +293,7 @@ export default class FlowNode extends BaseNode {
       index++;
       if (index > 9) {
         index = 0;
-      };
+      }
       return {
         lineDash,
         lineDashOffset: -index

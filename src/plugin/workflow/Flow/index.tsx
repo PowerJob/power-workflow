@@ -87,6 +87,8 @@ interface IProps {
   modes?: {[key: string]: any[]};
   /** 默认模式 */
   mode?: 'edit' | 'view';
+    /** 默认展示的命令 */
+  unusedCommands? : string[]; 
 } 
 
 const baseSize = {
@@ -256,7 +258,7 @@ class Flow extends Component<IProps> {
         {
           mode === 'edit' && (
             <div className="xioo-flow-header" ref={this.toolBar}>
-              <Header xiooFlow={this.xiooFlow}>
+              <Header xiooFlow={this.xiooFlow} unusedCommands={this.props.unusedCommands}>
                 {this.props.toolbar}
               </Header>
             </div>

@@ -49,11 +49,11 @@ const stateList = {
 
       const distanceX = Math.abs(endPos.x - startPos.x);
       const distanceY = Math.abs(endPos.Y - startPos.Y);
-      let disX = 20 / 1000 * distanceX;
-      let disY = 20 / 1000 * distanceY;
+      const disX = 20 / 1000 * distanceX;
+      const disY = 20 / 1000 * distanceY;
       let startX = nodeModel.startPos.x;
       let startY = nodeModel.startPos.x;
-      let inc = setInterval(() => {
+      const inc = setInterval(() => {
         if(startX < endPos.x) {
           clearInterval(inc);
         }
@@ -85,8 +85,8 @@ const stateList = {
 
 /** 计算字符的长度 */
 const calcStrLen = function calcStrLen(str) {
-  var len = 0;
-  for (var i = 0; i < str.length; i++) {
+  let len = 0;
+  for (let i = 0; i < str.length; i++) {
     if (str.charCodeAt(i) > 0 && str.charCodeAt(i) < 128) {
       len++;
     } else {
@@ -127,17 +127,17 @@ export default class BaseNode extends RegisterNode {
   getTextWidth(text) {
     // re-use canvas object for better performance
     this.canvas = this.canvas || document.createElement("canvas")
-    var context = this.canvas.getContext("2d");
+    const context = this.canvas.getContext("2d");
     context.font = "10px";
-    var metrics = context.measureText(text) ;
+    const metrics = context.measureText(text) ;
 
     return metrics.width - text.length * 2;
   }
 
   getTextWidth1(fontSize, text){
-    var span = document.createElement("span")
+    const span = document.createElement("span")
     span.style.fontSize = fontSize
-    var result:any = {}
+    let result:any = {}
     result.width = span.offsetWidth
     result.height = span.offsetWidth
     span.style.visibility = "hidden"
@@ -157,14 +157,14 @@ export default class BaseNode extends RegisterNode {
   /** 计算文字的宽度 */
   getTextWidth2(fontSize, text) {
     const fontWidth = fontSize; //字号+边距
-    var width = this.calcStrLen(text) * fontWidth;
+    const width = this.calcStrLen(text) * fontWidth;
     return width / 2;
   }
 
   /** 计算字符数 */
   calcStrLen(str) {
-    var len = 0;
-    for (var i = 0; i < str.length; i++) {
+    let len = 0;
+    for (let i = 0; i < str.length; i++) {
       if (str.charCodeAt(i) > 0 && str.charCodeAt(i) < 128) {
         len = ++len + 0.2;
       } else {
@@ -172,7 +172,7 @@ export default class BaseNode extends RegisterNode {
       }
     }
     return len;
-  };
+  }
 
   /** 判断宽度可以容纳多少字符 */
   withByContain(width, fontSize) {
@@ -189,7 +189,7 @@ export default class BaseNode extends RegisterNode {
     const containCharacter = this.withByContain(width, fontSize) - threshold;
     let finalText = '';
     let len = 0;
-    for (var i = 0; i < text.length; i++) {
+    for (let i = 0; i < text.length; i++) {
       if (text.charCodeAt(i) > 0 && text.charCodeAt(i) < 128) {
         len++;
       } else {
@@ -198,7 +198,7 @@ export default class BaseNode extends RegisterNode {
       if(len > containCharacter) {
         finalText += '...'
         break;
-      };
+      }
       finalText += text[i];
     }
     return finalText;
@@ -206,8 +206,8 @@ export default class BaseNode extends RegisterNode {
 
   /** 绘制主图形 */
   drawKeyShape(cfg, group) {
-    let width = this.size.width;
-    let height = this.size.height;
+    const width = this.size.width;
+    const height = this.size.height;
     const { style = {} } = cfg;
     const attrs = {
       ...nodeStyle.base.origin,
@@ -266,9 +266,9 @@ export default class BaseNode extends RegisterNode {
 
   /** 计算节点的宽高 */
   computeNodeSize(cfg): ISize {
-    let size = cfg.size && Array.isArray(cfg.size) ? cfg.size : [180, 70];
-    let width: number = size[0] ? size[0] : 180;
-    let height: number = size[1] ? size[1] : 70;
+    const size = cfg.size && Array.isArray(cfg.size) ? cfg.size : [180, 70];
+    const width: number = size[0] ? size[0] : 180;
+    const height: number = size[1] ? size[1] : 70;
     return {width, height}
   }
 
